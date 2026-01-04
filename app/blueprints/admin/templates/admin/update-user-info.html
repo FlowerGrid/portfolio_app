@@ -1,0 +1,19 @@
+{% extends 'admin/base.html' %}
+
+
+{% block admin_content %}
+<div class="flex-block-container">
+  <form class="update-user-info-form" method="post" action="{{ url_for('admin.update_user_info') }}" enctype="multipart/form-data">
+    <fieldset>
+      <legend>Update Info</legend>
+      {{ info_form.hidden_tag() }}
+      {{ info_form.username.label }}{{ info_form.username }}
+      {{ info_form.email.label }}{{ info_form.email }}
+      {{ info_form.logo_img.label }}{{ info_form.logo_img() }}
+      {{ info_form.security_question.label }}{{ info_form.security_question }}
+      {{ info_form.answer.label }}{{ info_form.answer }}
+      {{ info_form.submit() }}
+    </fieldset>
+  </form>
+</div>
+{% endblock %}

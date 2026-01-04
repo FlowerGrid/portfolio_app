@@ -1,0 +1,195 @@
+body {
+    height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.admin-head,
+.admin-foot {
+    background-color: #81AEB2;
+
+    display: flex;
+}
+
+.admin-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .5rem 3rem;
+}
+
+.admin-foot {
+    justify-content: center;
+    gap: 1rem;
+    font-size: 8pt;
+}
+
+/* Header elements */
+.admin-logo,
+.page-name {
+    flex: 1;
+}
+
+.admin-logo {
+    display: flex;
+    align-items: end;
+    gap: 1rem;
+}
+
+.admin-logo h2 {
+    margin: 0;
+    font-size: 32pt;
+    color: #5e888b;
+}
+
+.img-container {
+    height: 100px;
+    width: 100px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.img-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.admin-nav {
+    flex: none;
+    display: flex;
+    justify-content: center;
+}
+
+.admin-nav-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 0;
+    padding: 0;
+    background-color: #81AEB2;
+}
+
+.admin-nav-links li {
+    list-style: none;
+    margin: 0;
+    display: flex;
+    gap: 1rem;
+}
+
+.admin-nav-link {
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+    transition: transform .2s ease, color .2s ease;
+    font-size: 13pt;
+}
+
+.admin-nav-link:hover {
+    transform: scale(1.1);
+    color: white;
+}
+
+.page-name {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    font-size: 28pt;
+    color: #5e888b;
+    font-weight: bold;
+    height: 100%;
+}
+
+.admin-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fdfaf0;
+    padding: 1rem;
+}
+
+/* Buttons */
+.button-styles {
+    background-color: #F1F3F4;
+
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid black;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: .2rem 1rem;
+    margin: 4px 0;
+    text-align: center;
+
+}
+
+.button-styles:active {
+    background-color: #BABCBE;
+}
+
+/* settings styles */
+.user-info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60%;
+}
+
+.user-info {
+    padding: 4px 10px;
+}
+
+
+tr {
+    outline: 1px solid #ddd;
+
+
+}
+
+.user-info-btn {
+    width: 200px;
+    margin: 15px 0 0 0;
+    padding: .5rem;
+}
+
+
+/* Form Styles */
+fieldset {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 2rem;
+}
+
+label {
+    font-size: 10pt;
+    margin: 2px 0 2px 0;
+}
+
+input {
+    font-size: 14pt;
+    padding: .2rem .5rem;
+    margin-bottom: 20px;
+}
+
+#submit {
+    margin-top: 15px;
+    margin-bottom: 0;
+    padding: .5rem;
+}
+
+.flex-block-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+}

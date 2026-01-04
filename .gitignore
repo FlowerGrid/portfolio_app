@@ -1,0 +1,68 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+
+# macOS files
+.DS_Store
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Environment variables / credentials
+.env
+*.env
+client_secret_518510757672-aui0phron2t6tldbmd2a2206p7kj1k52.apps.googleusercontent.com.json
+client_secret*.json
+client_secret.json
+service_account.json
+
+# Flask-related
+instance/
+
+# SQLite databases
+*.db
+*.sqlite3
+
+# Uploaded images (optional — if you're not storing them in Git)
+uploads/
+
+# VSCode settings (if using VSCode)
+.vscode/
+.idea/
+
+# Bytecode cache
+*.cache
+
+# Build artifacts
+dist/
+build/
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# Logs
+*.log
+
+# Test files
+all_recipes.json
+todo.txt
+
+# Database files
+recipe-db
+recipe-db.sqlite3
+migrations/env2.py
+
+# photos
+# *.png
+# *.jpg
+# *.jpeg
+# *.gif
+
+scripts
+scripts/

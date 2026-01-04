@@ -1,0 +1,29 @@
+{% extends 'admin/base.html' %}
+
+
+{% block admin_content %}
+<div class="user-info-container">
+  <table class="admin-user-info-table">
+    <caption>User Info</th>
+    <tr class="admin-user-info-row">
+      <td class="user-info row-name">Username: </td>
+      <td class="user-info row-content">{{ user.username }}</td>
+    </tr>
+    <tr class="admin-user-info-row">
+      <td class="user-info row-name">Email: </td>
+      <td class="user-info row-content">{{ user.email }}</td>
+    </tr>
+    <tr class="admin-user-info-row">
+      <td class="user-info row-name">Security Question: </td>
+      <td class="user-info row-content">{{ user.security_question }}</td>
+    </tr>
+    {# <!-- <tr class="admin-user-info-row">
+      <td class="user-info row-name">Answer: </td>
+      <td class="user-info row-content">{{ data.answer }}</td>
+    </tr> --> #}
+  </table>
+  <a href="{{ url_for('admin.update_user_info') }}" class="user-info-btn edit-user-info-button button-styles">Edit</a>
+  <a href="{{ url_for('admin.change_pw')}}" class="user-info-btn change-pw-button button-styles">Reset Password</a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'main/base.html' %}
+{% block links %}
+<script src="{{ url_for('main.static', filename='js/projectScript.js') }}" defer></script>
+{% endblock %}
+
+{% block title %}{{ project.title }} Project{% endblock %}
+
+{% block content %}
+<div class="page-content-container">
+  <div class="page-content">
+    <h1 class="project-title">
+      {{ project.title }}
+    </h1>
+    {% if project.image_url %}
+    <div class="img-container">
+      <img src="{{ project.image_url }}" class="img" alt="{{ project.title }} - Flower Grid Cooking">
+    </div>
+    {% endif %}
+    <div class="project-blurb project-item">
+      {{ project.blurb | safe }}
+    </div>
+    <h3>
+      Steps
+    </h3>
+    <div class="steps project-item">
+      {{ project.steps | safe }}
+    </div>
+  </div>
+  <a href="{{ url_for('main.projects')}}" class="back-button button-styles">← Back to Projects</a>
+</div>
+
+
+{% endblock %}

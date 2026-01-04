@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Admin{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('admin.static', filename='css/admin-styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-styles.css') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='images/pk_favicon.png')}}" type="image/x-icon">
+  <script src="{{ url_for('static', filename='js/hamburgerMenu.js') }}" defer></script>
+  {% block admin_styles %}{% endblock %}
+  {% block scripts %}{% endblock %}
+</head>
+<body data-page-name="{{ data.page_name }}">
+  <div class="admin-container">
+    <!-- Header -->
+    <div class="admin-head header">
+      <div class="admin-logo">
+          <div class="img-container logo">
+            <img src="{{ logo_url }}" alt="Flower Grid Cooking Logo">
+          </div>
+          <h2 class="admin-hidden">Admin</h2>
+      </div>
+
+      <div class="nav">
+        <nav class="admin-nav">
+            <div class="hamburger-menu">
+              <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          <ul class="admin-nav-links nav-links">
+            <li><a href="{{ url_for('admin.admin_dash') }}" class="admin-nav-link nav-link">Dashboard</a></li>
+            <li><a href="{{url_for('admin.admin_all_projects') }}" class="admin-nav-link nav-link">My Projects</a></li>
+            <li><a href="{{url_for('admin.admin_all_blogs') }}" class="admin-nav-link nav-link">Blog</a></li>
+            <li><a href="{{url_for('admin.admin_settings') }}" class="admin-nav-link nav-link">Settings</a></li>
+            <li><a href="{{ url_for('admin.logout') }}" class="admin-nav-link nav-link">Logout</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="page-name admin-hidden">{{ data.page_name }}</div>
+
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <div class="admin-content main-content">{% block admin_content %}{% endblock %}</div>
+    <div class="admin-foot">
+      <p>© 2025 The Pizza King DTX</p>
+      <p> | </p>
+      <p>Site design by Flower Grid Coding</p>
+    </div>
+  </div>
+</body>
+</html>

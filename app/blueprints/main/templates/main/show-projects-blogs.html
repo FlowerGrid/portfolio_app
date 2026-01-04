@@ -1,0 +1,38 @@
+{% extends 'main/base.html' %}
+{% block links %}
+  <link rel="stylesheet" href="{{ url_for('main.static', filename='css/projects-blogs-styles.css' )}}">
+{% endblock %}
+{% block title %}{{ data.type }}{% endblock %}
+
+{% block content %}
+
+  <div class="all-objects-grid">
+    {% for object in objects %}
+    {% if data.type == 'Project' %}
+    <a href="projects/{{ object.slug }}" class="object-link">
+    {% elif data.type == 'Blog' %}
+    <a href="blog/{{ object.slug }}" class="object-link">
+    {% endif %}
+      <div class="object-card">
+        <div class="object-pic">
+          {% if object.image_url %}
+          <img src="{{ object.image_url }}" alt="{{ object.title }}">
+          {% else %}
+          <img src="{{ url_for('static', filename='images/pk_animated.png') }}" alt="{{ object.title }}">
+          {% endif %}
+        </div>
+        <div class="object-blurb">
+          <h3>
+            {{ object.title }}
+          </h3>
+          <div class="all-objects-blurb-text">
+            {{ object.blurb_plaintext | safe }}
+          </div>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+
+{% endblock %}

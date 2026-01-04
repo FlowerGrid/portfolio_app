@@ -1,0 +1,143 @@
+input,
+textarea {
+    font-family: inherit;
+    font-size: 12pt;
+}
+
+.add-post-form {
+    width: 621px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+}
+
+.add-post-form #form-submit-btn {
+
+    padding: .5rem 4rem;
+    align-self: flex-end;
+    margin-top: 15px;
+}
+
+.title-container {
+    display: grid;
+    grid-template-columns: 5fr 1fr;
+    gap: 0 1rem;
+    font-size: 16pt;
+    align-items: end;
+}
+
+.title-input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.title-input-container input {
+    width: 95%;
+    font-size: 14pt;
+    padding: 5px;
+    margin: 0;
+}
+
+.title-container select {
+    font-size: 14pt;
+    font-weight: light;
+    justify-items: end;
+}
+
+label {
+    font-size: 12pt;
+    font-weight: bold;
+}
+
+h4 {
+    margin: 2px 0 4px 0;
+}
+
+.tags-display {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: .25rem;
+    padding: .25rem;
+    margin: 0;
+    /* background-color: lightgray; */
+    /* border: 1px solid black; */
+    border-radius: 3px;
+    cursor: default;
+    min-height: 1.5rem;
+}
+
+.tags-display li {
+    display: flex;
+    align-items: center;
+
+    list-style-type: none;
+    color: #fdfaf0;
+    background-color: #81AEB2;
+    border-radius: 5px;
+    box-sizing: border-box;
+    padding: .15rem .4rem;
+}
+
+.remove-icon {
+    font-size: 6pt;
+    margin-left: .4rem;
+    align-items: end;
+}
+
+
+.photo-container label {
+    display: block;
+}
+
+.img-preview-container {
+    width: 200px;
+    /* height: 300px; */
+
+    border: solid black 1px;
+    border-radius: 8px;
+    overflow: hidden;
+    align-self: center;
+    margin: 16px 0;
+}
+
+.img-preview-container img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    display: block;
+    aspect-ratio: 4 / 2.5;
+}
+
+
+@media (max-width: 768px){
+    #blurb {
+        width: 100%;
+    }
+
+    .step-text {
+        width: 100%;
+    }
+
+    .add-post-form {
+        width: 100%;
+    }
+
+    .title-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .add-post-form #form-submit-btn {
+        align-self: stretch;
+        padding: 1rem 4rem;
+        box-sizing: border-box;
+        margin-top: 30px;
+    }
+}

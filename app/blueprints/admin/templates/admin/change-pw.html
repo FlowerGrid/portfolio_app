@@ -1,0 +1,16 @@
+{% extends 'admin/base.html' %}
+
+
+{% block admin_content %}
+  <form class="change-pw-form" method="post" action="{{ url_for('admin.change_pw') }}">
+    <fieldset>
+      <legend>Change Password</legend>
+      {{ form.hidden_tag() }}
+      {{ form.old_pw.label }}{{ form.old_pw }}
+      {{ form.new_pw.label }}{{form.new_pw }}
+      {{ form.rep_new_pw.label }}{{ form.rep_new_pw }}
+      {{ form.submit() }}
+    </fieldset>
+  
+  </form>
+{% endblock %}

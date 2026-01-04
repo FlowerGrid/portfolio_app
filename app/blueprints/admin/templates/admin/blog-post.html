@@ -1,0 +1,60 @@
+{% extends 'admin/base.html' %}
+
+{% block admin_styles %}
+  <link rel="stylesheet" href="{{ url_for('admin.static', filename='css/add-post-styles.css')}}">
+  <script src="{{ url_for('admin.static', filename='js/adminAddPost.js') }}" defer></script>
+{% endblock %}
+
+{% block admin_content %}
+
+  <form class="add-post-form" id="add-post-form" action="{{ url_for('admin.new_blog_post') }}" method="post" enctype="multipart/form-data" >
+      {{ form.hidden_tag() }}
+      {{ form.blog_id }}
+      
+      <div class="title-container">
+        <div class="title-input-container">{{ form.title.label }}{{ form.title() }}</div>
+        {# <!-- <div class="category-container">
+          {{ form.category.label }}
+          <div class="category-container">{{ form.category() }}</div>
+        </div> --> #}
+      </div>
+
+      <!-- Tags -->
+
+      <div class="tags-container">
+        <h4>Tags</h4>
+        <div class="tag-input-container">
+          <!-- <label for="tag-input">Enter a tag</label> -->
+          <input type="text" name="tag-input" id="tag-input" maxlength="30" placeholder="Add a tag">
+          <input type="button" id="tag-input-button" class="button-styles" value="Add Tag">
+
+        </div>
+        <ul class="tags-display">
+        </ul>
+      </div>
+
+      <div class="photo-container">
+        {{ form.photo.label }} {{ form.photo() }}    
+        {% if data.img %}
+        <div class="img-preview-container">
+          <img src="{{ data.img }}" alt="Pizza">
+        </div>
+        {% endif %}
+      </div>
+      
+      <div class="blurb-container">{{ form.blurb.label }} {{ form.blurb() }}</div>
+
+      {{ form.form_submit_btn(id="form-submit-btn") }}
+  </form>
+
+  {% if data.tags_list %}
+    <script>
+      var existingTags = {{ data.tags_list | tojson }};
+    </script>
+  {% endif %}
+
+  <!-- Load the CKEditor JS -->
+  {{ ckeditor.load() }}
+  {{ ckeditor.config(name='blurb', placeholder='Pizza Blog Article') }}
+
+{% endblock %}

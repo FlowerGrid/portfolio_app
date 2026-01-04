@@ -1,0 +1,22 @@
+{% extends 'main/base.html' %}
+{% block links %}
+<script src="{{ url_for('main.static', filename='js/projectScript.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
+
+
+<div class="page-content-container">
+  <div class="page-content">
+    <h1>{{ post.title }}</h1>
+    {% if post.image_url %}
+    <div class="img-container">
+      <img src="{{ post.image_url }}" class="img" alt="{{ post.title }} - The Pizza King, DTX">
+    </div>
+    {% endif %}
+    {{ post.blurb | safe }}
+  </div>
+<a href="{{ url_for('main.blog_posts')}}" class="back-button button-styles">← Back to Blog</a>
+</div>
+
+{% endblock %}

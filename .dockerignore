@@ -1,0 +1,49 @@
+# Ignore git files
+.git
+.gitignore
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments (NEVER copy your venv into image)
+venv/
+env/
+.venv/
+
+# Local environment variables
+.env
+*.env
+
+# Local databases
+*.sqlite3
+*.db
+recipe-db.sqlite3
+
+# Mac system files
+.DS_Store
+
+# Flask instance folder
+instance/
+
+# Uploaded files
+uploads/
+static/uploads/
+*uploads/
+
+# IDE configs
+.vscode/
+.idea/
+
+# Build artifacts
+dist/
+build/
+
+# Tests (optional if not needed in production)
+tests/
+todo.txt
+
+# scripts
+scripts/

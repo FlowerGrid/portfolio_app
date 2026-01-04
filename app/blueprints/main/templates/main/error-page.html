@@ -1,0 +1,23 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="error-handling-message-container">
+  <div class="error-handling-message">
+    <h1>{{ error.code }}</h1>
+
+    {% if error.code == 404%}
+    <h3>Sorry, we couldn't find the page you requested</h3>
+    {% elif error.code == 401 %}
+    <h3>Sorry, you don't have access.</h3>
+    {% elif error.code == 500 %}
+    <h3>Something went wrong on our end. Please try again later</h3>
+    {% else %}
+    <h3>An unexpected error occured</h3>
+    {% endif %}
+
+    <p class="return-home-message">
+      <a href="{{ url_for('main.index') }}">Return to Home page</a>
+    </p>
+  </div>
+</div>
+{% endblock%}

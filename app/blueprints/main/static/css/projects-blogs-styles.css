@@ -1,0 +1,107 @@
+.all-objects-grid {
+    width: 80%;
+    /* border: solid black 2px; */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+.object-card {
+    display: flex;
+    overflow: hidden;
+    box-shadow: silver 0px 0px 12px 1px;
+    gap: 1.5rem;
+    /* align-items: center; */
+    transition: transform .2s ease;
+    border-radius: 8px;
+    height: 180px;
+
+}
+
+.object-blurb {
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 1rem 1rem 0;
+}
+
+.object-card:hover {
+    transform: scale(1.05);
+    box-shadow: silver 0px 0px 10px 1px;
+}
+
+.object-pic {
+    overflow: hidden;
+    flex-shrink: 0;
+    height: 100%;
+    width: 200px;
+}
+
+.object-pic img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.object-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.object-link:visited {
+    color: inherit;
+}
+
+/* Truncate and fade the paragraph text */
+.all-objects-blurb-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 5; /* Adjust line count as needed */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    position: relative;
+    /* max-height: 4.5em; Optional fallback */
+    margin: 0;
+    padding: 0;
+}
+
+/* Fade effect (overlay) */
+.all-objects-blurb-text::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1.5em;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), #fdfaf0);
+}
+
+@media (max-width: 768px) {
+    .all-objects-grid {
+        width: 100%;
+        /* border: solid black 2px; */
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        padding: 2rem 0;
+    }
+
+    .object-card {
+        height: 120px;
+
+    }
+
+    .object-pic {
+        width: 100px;
+    }
+
+    .object-blurb h3,
+    .object-blurb p {
+        margin: .25rem;
+    }
+
+    .object-blurb p {
+        -webkit-line-clamp: 4;
+    }
+}

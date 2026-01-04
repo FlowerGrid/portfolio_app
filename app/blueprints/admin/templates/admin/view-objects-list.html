@@ -1,0 +1,49 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}{{ data.page_name }}{% endblock %}
+{% block admin_styles %}
+<link rel="stylesheet" href="{{ url_for('admin.static', filename='css/admin-all-projects-styles.css') }}">
+<script src="{{ url_for('admin.static', filename='js/adminAllProjects.js' )}}" defer></script>
+{% endblock %}
+
+{% block admin_content %}
+<div class="add-button-container">
+  {% if data.type == 'Project' %}
+    <a href="{{ url_for('admin.add_project') }}" class="add-button button-styles">
+      Add {{ data.type }}
+    </a>
+  {% elif data.type == 'Blog' %}
+    <a href="{{ url_for('admin.new_blog_post') }}" class="add-button button-styles">
+      New {{ data.type }}
+    </a>
+  {% endif %}
+</div>
+
+<ul class="all-objects">
+{% for object in all_objects %}
+  <li class="object">
+    <div class="object-preview-content">
+      <div class="object-title">{{ object.id }}: {{ object.title }}</div>
+      <div class="buttons-container">
+        <a href="
+        {% if data.type == 'Project' %}
+        {{ url_for('admin.edit_project', project_id=object.id )}} 
+        {% elif data.type == 'Blog' %}
+        {{ url_for('admin.edit_blog_post', blog_id=object.id) }}
+        {% endif %}
+        "
+        class="button-styles edit-button inner-button" data-object-id="{{ object.id }}" data-is-active="{{ object.is_active }}">Edit</a>
+
+        {% if object.is_active %}
+        <div class="button-styles toggle-active-button active-project inner-button"></div>
+        {% else %}
+        <div class="button-styles toggle-active-button inner-button">Active</div>
+        {% endif %}
+        
+      </div>
+    </div>
+  </li>
+{% endfor %}
+</ul> 
+
+{% endblock %}
