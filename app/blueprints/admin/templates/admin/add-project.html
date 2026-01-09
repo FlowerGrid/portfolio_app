@@ -18,6 +18,10 @@
         </div> --> #}
       </div>
 
+      <div class="project-link-container">
+        {{ form.project_link.label }} {{ form.project_link() }}
+      </div>
+
       <!-- Tags -->
       <div class="tags-container">
         <h4>Tags</h4>
@@ -40,8 +44,6 @@
       </div>
       
       <div class="blurb-container">{{ form.blurb.label }} {{ form.blurb() }}</div>
-      
-      <div class="steps-container">{{ form.steps.label }} {{ form.steps() }}</div>
 
       {{ form.form_submit_btn(id="form-submit-btn") }}
   </form>

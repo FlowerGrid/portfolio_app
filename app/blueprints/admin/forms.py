@@ -33,7 +33,7 @@ class ProjectForm(FlaskForm):
     tags = HiddenField('Tags')
     photo = FileField('Photo', validators=[FileAllowed(['jpg', 'png', 'heic', 'heif'], 'Images only!')])
     blurb = CKEditorField('Blurb', validators=[InputRequired()], render_kw={'placeholder': 'Blurb'})
-    steps = CKEditorField('Steps', validators=[InputRequired()], render_kw={'placeholder': 'Cooking Instructions'})
+    project_link = StringField('Project Link', render_kw={'placeholder': 'Link to live project'})
     form_submit_btn = SubmitField('Submit')
 
 
