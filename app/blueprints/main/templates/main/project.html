@@ -19,9 +19,16 @@
     <div class="project-blurb project-item">
       {{ project.blurb | safe }}
     </div>
+    {% if project.project_link %}
     <h3>
-      See it in action <a href="project.project_link" target="_blank">Here</a>
+      See it live in action <a href="{{ project.project_link }}" target="_blank">here</a>.
     </h3>
+    {% endif %}
+    {% if project.github_link %}
+    <h3>
+      View the code <a href="{{ project.github_link }}" target="_blank"> here</a>.
+    </h3>
+    {% endif %}
   </div>
   <a href="{{ url_for('main.projects')}}" class="back-button button-styles">← Back to Projects</a>
 </div>

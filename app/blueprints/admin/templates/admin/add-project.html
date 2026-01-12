@@ -11,15 +11,19 @@
       {{ form.project_id }}
       
       <div class="title-container">
-        <div class="title-input-container">{{ form.title.label }}{{ form.title() }}</div>
+        <div class="post-input-container">{{ form.title.label }}{{ form.title() }}</div>
         {# <!-- <div class="category-container">
           {{ form.category.label }}
           <div class="category-container">{{ form.category() }}</div>
         </div> --> #}
       </div>
 
-      <div class="project-link-container">
-        {{ form.project_link.label }} {{ form.project_link() }}
+      <div class="post-input-container">
+        {{ form.project_link.label }}{{ form.project_link() }}
+      </div>
+
+      <div class="post-input-container">
+        {{ form.github_link.label }}{{ form.github_link() }}
       </div>
 
       <!-- Tags -->

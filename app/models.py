@@ -37,6 +37,7 @@ class Project(Base):
     slug = Column(String, unique=True, nullable=False)
     blurb = Column(Text, nullable=False)
     project_link = Column(String, unique=True)
+    github_link = Column(String)
     image_url = Column(String)
     # category_id = Column(Integer, ForeignKey('categories.id'), nullable=False) # need to build table
     is_active = Column(Boolean, default=True, nullable=False)

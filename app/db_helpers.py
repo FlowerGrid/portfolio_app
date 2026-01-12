@@ -29,14 +29,13 @@ def gather_form_data_unified(model_cls, form, rel_attr_name):
     slug = secure_filename(slugify(title))
     # cat_id = form.category.data
     blurb = sanitize_html(form.blurb.data.strip())
-
     model_cls_str = model_cls.__tablename__ # String of table's name
     logger.info('model class string: ', model_cls_str)
 
     project_exclusives = {}
     try:
-        project_exclusives['ingredients'] = sanitize_html(form.ingredients.data.strip())
-        project_exclusives['steps'] = sanitize_html(form.steps.data.strip())
+        project_exclusives['project_link'] = sanitize_html(form.project_link.data.strip())
+        project_exclusives['github_link'] = sanitize_html(form.github_link.data.strip())
     except AttributeError:
         pass
 

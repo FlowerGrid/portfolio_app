@@ -19,22 +19,16 @@ textarea {
     margin-top: 15px;
 }
 
-.title-container {
-    display: grid;
-    grid-template-columns: 5fr 1fr;
-    gap: 0 1rem;
-    font-size: 16pt;
-    align-items: end;
-}
 
-.title-input-container {
+
+.post-input-container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
 }
 
-.title-input-container input {
+.post-input-container input {
     width: 95%;
     font-size: 14pt;
     padding: 5px;

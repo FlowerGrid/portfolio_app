@@ -18,11 +18,20 @@
     * Save your database url in the environment variables as `DATABASE_URL`.
         * Flask will read this and store it in the app's config as `SQLALCHEMY_DATABASE_URI` for connecting to the database.
     * To set up the schema for the database run
-    `alembic revision --autogenerate -m "initial schema"` 
-    in the terminal
+
+        `alembic revision --autogenerate -m "initial schema"`
+
+      in the terminal
     * to apply migrations and populate your database run 
     `alembic upgrade head`
     in the terminal
+
+5. Create User (Development Environment)
+    * With your virtual environment active. From the root directory run
+
+        `flask create-user`
+    
+    * You'll then be prompted to enter user credentials
 
 5. Set up image hosting
     * IMAGE_STORAGE_CONTAINER - hosting environment variable

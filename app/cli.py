@@ -1,5 +1,7 @@
 """
 Create User CLI tool
+To Run:
+- 
 """
 
 def init_cli(app):

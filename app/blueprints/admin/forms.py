@@ -34,6 +34,7 @@ class ProjectForm(FlaskForm):
     photo = FileField('Photo', validators=[FileAllowed(['jpg', 'png', 'heic', 'heif'], 'Images only!')])
     blurb = CKEditorField('Blurb', validators=[InputRequired()], render_kw={'placeholder': 'Blurb'})
     project_link = StringField('Project Link', render_kw={'placeholder': 'Link to live project'})
+    github_link = StringField('Github LInk', render_kw={'placeholder': 'Link to github repo'})
     form_submit_btn = SubmitField('Submit')
 
 
