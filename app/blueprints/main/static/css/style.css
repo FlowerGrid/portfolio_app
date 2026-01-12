@@ -3,6 +3,7 @@
     --primary-dark: #0F172A;
     --secondary-light: #64748B;
     --primary-light: #F4F4F4;
+    --accent-color: #22D3EE;
     --primary-text-color: var(--primary-dark);
     
     --header-footer-bg-color: var(--secondary-light);
@@ -13,6 +14,7 @@
     --button-onclick-color: #61474D;
     --link-txt-color: #0566b8;
     --link-hover-txt-color: #eeb230;
+    --neat-brown: #413324;
 }
 
 body {
@@ -45,7 +47,6 @@ h1,h2,h3,h4,h5,h6 {
 .footer {
     font-family: "Roboto", Arial, Helvetica, sans-serif;
     padding: 1rem;
-    /* background-color: #eeb230; */
     background-color: var(--header-footer-bg-color);
     color: var(--header-footer-txt-color);
 }
@@ -138,7 +139,7 @@ nav ul {
 }
 
 .nav-link:hover {
-    color: #413324;
+    color: var(--neat-brown);
     transform: scale(1.1);
 }
 
@@ -161,20 +162,17 @@ nav li {
     display: block;
     font-size: 14pt;
     font-weight: bold;
-    /* background-color: #F1F3F4; */
-    /* background-color: #eeb230; */
     background-color: var(--button-bg-color);
-    /* background-color: #61474D; */
     color: var(--button-txt-color);
     text-shadow:
-        1px 0 #413324,
-        -1px 0 #413324,
-        0 1px #413324,
-        0 -1px #413324,
-        1px 1px #413324,
-        -1px -1px #413324,
-        1px -1px #413324,
-        -1px 1px #413324;
+        1px 0 var(--neat-brown),
+        -1px 0 var(--neat-brown),
+        0 1px var(--neat-brown),
+        0 -1px var(--neat-brown),
+        1px 1px var(--neat-brown),
+        -1px -1px var(--neat-brown),
+        1px -1px var(--neat-brown),
+        -1px 1px var(--neat-brown);
     text-decoration: none;
     border: 6px solid var(--button-txt-color);
     border-radius: 30px;
@@ -185,14 +183,13 @@ nav li {
     text-align: center;
     align-self: flex-end;
     cursor: pointer;
-    box-shadow: 0 0 0 1px #413324,
-    inset 0 0 0 1px #413324,
+    box-shadow: 0 0 0 1px var(--neat-brown),
+    inset 0 0 0 1px var(--neat-brown),
     0 4px 6px rgba(0, 0, 0, 0.3);
 
 }
 
 .button-styles:active {
-    /* background-color: #df9f13; */
     background-color: var(--button-onclick-color);
     box-shadow: 
         3px rgba(0, 0, 0, 0.4),
