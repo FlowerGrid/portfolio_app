@@ -1,14 +1,15 @@
 :root {
     /* Brand Colors */
-    --color-sage: #48615b;
-    --color-cream: #fbf3d9;
-    --color-not-white: #fdfaf0;
+    --primary-dark: #0F172A;
+    --secondary-light: #64748B;
+    --primary-light: #F4F4F4;
+    --primary-text-color: var(--primary-dark);
     
-    --header-footer-bg-color: var(--color-sage);
-    --header-footer-txt-color: var(--color-cream);
-    --main-bg-color: var(--color-not);
-    --button-bg-color: var(--color-sage);
-    --button-txt-color: var(--color-cream);
+    --header-footer-bg-color: var(--secondary-light);
+    --header-footer-txt-color: var(--primary-light);
+    --main-bg-color: var(--primary-light);
+    --button-bg-color: var(--secondary-light);
+    --button-txt-color: var(--primary-light);
     --button-onclick-color: #61474D;
     --link-txt-color: #0566b8;
     --link-hover-txt-color: #eeb230;
@@ -19,7 +20,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     padding: 0;
     margin: 0;
-    color: #413324;
+    color: var(--primary-text-color);
     
     font-family: "Spectral", Serif;
 }

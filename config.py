@@ -32,10 +32,12 @@ class DevelopmentConfig(BaseConfig):
     DEBUG = True
     UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
 
-
     IMAGE_STORAGE_BACKEND = 'local'
     IMAGE_STORAGE_CONTAINER = UPLOAD_FOLDER
 
 
 class TestingConfig(BaseConfig):
-    pass
+    UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
+
+    IMAGE_STORAGE_BACKEND = 'local'
+    IMAGE_STORAGE_CONTAINER = UPLOAD_FOLDER

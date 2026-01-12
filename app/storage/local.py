@@ -16,8 +16,13 @@ class LocalImageStorage:
 
             img.thumbnail((MAX_SIZE, MAX_SIZE)) # MAX_SIZE = 1024
 
+            # Create uploads folder if it doesn't exist
+            model_class_dir = slug.split('/')[0]
+            if not os.path.exists(os.path.join(self.upload_dir, model_class_dir)):
+                os.mkdir(os.path.join(self.upload_dir, model_class_dir))
+
             filename = os.path.join(self.upload_dir, f'{slug}.png')
 
             img.save(filename, format='PNG', optimize=True)
 
-        return os.path.join('uploads', filename)
+        return os.path.join('/uploads', f'{slug}.png')
