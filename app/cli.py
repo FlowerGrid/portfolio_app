@@ -4,6 +4,11 @@ To Run:
 - 
 """
 import click
+import os
+from dotenv import load_dotenv
+from .logger import logger
+
+load_dotenv()
 
 def init_cli(app):
     @app.cli.command('create-user')
@@ -42,6 +47,33 @@ def init_cli(app):
         except Exception as e:
             print(f"Failed to rollback session: {e}")
 
+    
+    @app.cli.command('gcr-create-admin')
+    def gcr_create_admin():
+        """
+        cli command for google cloud run to seed admin user in a run job
+        Inject USERNAME, USER_EMAIL, and USER_PASSWORD as environment variables to the job itself
+        """
+        from .db import db_session
+        from .models import User
+
+        existing_admin = db_session.query(User).filter_by(is_admin=True).first()
+        if existing_admin:
+            logger.error("Admin user already exists. Aborting.")
+            raise SystemExit(1)
+
+
+        username = os.getenv('USERNAME')
+        email = os.getenv('USER_EMAIL')
+        password = os.getenv('USER_PASSWORD')
+
+        if not all([username, email, password]):
+            logger.error("Missing USERNAME, USER_EMAIL, or USER_PASSWORD env vars.")
+            raise SystemExit(1)
+
+
+        add_user_to_db(username, email, password, db_session, User, True)
+
 
 def prompt_user_creds():
     while True:
@@ -78,6 +110,12 @@ def add_user_to_db(username, email, password, db_session, User, is_admin):
     user.set_security_answer('answer')
 
     db_session.add(user)
-    db_session.commit()
+    try:
+        db_session.commit()
+    except Exception:
+        db_session.rollback()
+        logger.error('Failed to create admin user')
+        raise
+
 
 
