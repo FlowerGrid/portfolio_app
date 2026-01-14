@@ -1,0 +1,177 @@
+{% extends 'main/base.html' %}
+{% block links %}
+<script src="{{ url_for('main.static', filename='js/projectScript.js') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('main.static', filename='css/resume-styles.css') }}">
+{% endblock %}
+
+{% block title %}Resume{% endblock %}
+
+{% block content %}
+<div class="resume-container">
+  <h1>My Resume</h1>
+  <div class="contact-container">
+    <h2>Ben Edge</h2>
+    <a href="https://www.linkedin.com/in/benjamine-e-4bbb542b4/" class="linkedin-link" target="_blank">LinkedIn</a>
+    <a href="https://www.github.com/FlowerGrid" class="github-link">Github</a>
+  </div>
+  <h2>Professional Summary</h2>
+  <p class="professional-summary">
+    Self-taught software developer with a strong foundation in Python, JavaScript, 
+    HTML, and CSS. Experienced in web development using Flask and Django, as well 
+    as automation and data processing with tools like Selenium and pandas. Proven 
+    ability to solve complex problems, develop user-focused applications, and 
+    automate workflows for increased productivity. Adept at using AI tools like 
+    ChatGPT to enhance productivity, debug code, and improve clarity in data 
+    communication.
+  </p>
+  <p class="professional-summary">
+    Transitioning from a successful career as a professional musician and small 
+    business owner, leveraging organizational and creative skills in the software 
+    and data industry.
+  </p>
+  <h2>Technical Skills</h2>
+  <ul>
+    <li>
+      <strong>Programming Languages:</strong> Python, JavaScript, HTML, CSS
+    </li>
+    <li>
+      <strong>Frameworks and Libraries:</strong> Flask, Django
+    </li>
+    <li>
+      <strong>Tools and Technologies:</strong> Selenium, pandas, TKinter, Git, 
+      GitHub, Google OAuth, Google APIs, PaddleOCR
+    </li>
+    <li>
+      <strong>Other Skills:</strong> Web scraping, data organization, workflow automation
+    </li>
+  </ul>
+  <h2>Coding Projects</h2>
+  <div class="project-container">
+    <h4>Cooking Blog Platform (Flask)</h4>
+    <p>
+      Developed a reusable web application framework for creating recipe and 
+      blog websites. Key features include:
+    </p>
+    <ul>
+      <li>
+        Modular Flask app structure with environment-based configuration for 
+        local development and production deployments.
+      </li>
+      <li>
+        Image upload and management system supporting both Google Cloud Storage 
+        and local file storage, with automatic resizing and validation.
+      </li>
+      <li>
+        User authentication and admin management, including CLI tools for 
+        seeding and managing users.
+      </li>
+      <li>
+        Dynamic content handling with CKEditor, HTML sanitization, and 
+        database-backed storage in PostgreSQL (Supabase).
+      </li>
+      <li>
+        Designed as a template for future projects, enabling rapid deployment of 
+        new web apps with minimal setup.
+      </li>
+    </ul>
+  </div>
+  <div class="project-container">
+    <h4>Setlist Builder and Music Director Automation (Flask)</h4>
+    <p>
+      Developed a web application for a cover band to streamline setlist creation 
+      and automate administrative tasks. Key features include:
+    </p>
+    <ul>
+      <li>
+        Google OAuth authentication and integration with Google Drive.
+      </li>
+      <li>
+        Management of a song database stored in Google Sheets with details like 
+        key, tempo, and artist.
+      </li>
+      <li>
+        Automatic generation of event-specific set materials, including 
+        formatted PDFs, folder structures, and chord chart/audio reference shortcuts.
+      </li>
+      <li>
+        Drafting email summaries with links and notes for team communication.
+      </li>
+    </ul>
+  </div>
+  <div class="project-container">
+    <h4>Spreadsheet Data Extraction and Normalization (Python / PaddleOCR / OpenCV)</h4>
+    <p>
+      Developed a robust pipeline to convert screenshots of structured 
+      spreadsheets into clean, consolidated CSVs with minimal client cleanup.
+    </p>
+    <ul>
+      <li>
+        Automated detection of cell boundaries using OpenCV and gridline 
+        analysis for accurate OCR extraction.
+      </li>
+      <li>
+        Leveraged PaddleOCR and Python to extract text from each cell, handling 
+        merged or missing columns intelligently.
+      </li>
+      <li>
+        Implemented post-processing logic to normalize inconsistent data across 
+        multiple images into a single, validated dataset.
+      </li>
+      <li>
+        Used iterative AI-assisted prompting to design and refine extraction 
+        logic, accelerating development and reducing errors.
+      </li>
+    </ul>
+  </div>
+  <h2>Professional Experience</h2>
+  <div class="project-container">
+    <h4>Trade Promotions Specialist</h4>
+    <p>Dr Pepper Snapple Group | 2012 – 2013</p>
+    <ul>
+      <li>
+        Audited sales managers’ check requests to ensure accurate accounting allocation.
+      </li>
+      <li>
+        Collaborated with the customer trade accounting department to maintain 
+        financial integrity.
+      </li>
+    </ul>
+  </div>
+  <div class="project-container">
+    <h4>Professional Musician and Business Owner</h4>
+    <p>Self-Employed | 2009 – Present</p>
+    <ul>
+      <li>
+        Managed all aspects of freelance music business, including income/expense 
+        tracking, client networking, branding, and marketing.
+      </li>
+      <li>
+        Co-founded and operated a 90s country cover band LLC, overseeing digital 
+        marketing, website management, and music direction.
+      </li>
+    </ul>
+  </div>
+  <h2>Education</h2>
+  <div class="project-container">
+    <h4>Bachelor of Business Administration in Finance</h4>
+    <p>University of North Texas | 2011</p>
+  </div>
+  <div class="project-container">
+    <h4>CS50: Introduction to Computer Science Certificate</h4>
+    <p>Harvard University Online | 2023</p>
+  </div>
+  <div class="project-container">
+    <h4>Google Data Analytics Professional Certificate</h4>
+    <p>Coursera / Google Career Certificates</p>
+    <ul>
+      <li>
+        Completed coursework in data cleaning, analysis, and visualization using 
+        spreadsheets, SQL, R, and Tableau.
+      </li>
+      <li>
+        Emphasis on practical, business-oriented data projects.
+      </li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

@@ -1,20 +1,21 @@
 :root {
     /* Brand Colors */
-    --primary-dark: #0F172A;
-    --secondary-light: #64748B;
-    --primary-light: #F4F4F4;
-    --accent-color: #22D3EE;
+    --primary-dark: #0F172A; /* Dark Navy */
+    --secondary-light: #64748B; /* Cool Gray */
+    --primary-light: #F4F4F4; /* White */
+    --accent-color: #22D3EE; /* Neon Cyan */
+    --neat-brown: #413324;
+    --button-onclick-color: #61474D;
+    --link-txt-color: #0566b8;
+    --link-hover-txt-color: #eeb230;
+
     --primary-text-color: var(--primary-dark);
-    
     --header-footer-bg-color: var(--secondary-light);
     --header-footer-txt-color: var(--primary-light);
     --main-bg-color: var(--primary-light);
     --button-bg-color: var(--secondary-light);
     --button-txt-color: var(--primary-light);
-    --button-onclick-color: #61474D;
-    --link-txt-color: #0566b8;
-    --link-hover-txt-color: #eeb230;
-    --neat-brown: #413324;
+
 }
 
 body {
@@ -94,8 +95,8 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .logo {
-    height: 155px;
-    width: 155px;
+    height: 100px; /* was 155 */
+    width: 100px; /* was 155 */
     overflow: hidden;
     border-radius: 50%;
 }

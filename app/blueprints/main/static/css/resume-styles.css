@@ -1,0 +1,29 @@
+@media (min-width: 768px) {
+    h2, h4 {
+        margin: 20px 0 0 0;
+    }
+    .resume-container {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .contact-container {
+        display: flex;
+        flex-direction: column;
+        
+    }
+
+    .project-container {
+        display: flex;
+        flex-direction: column;
+        margin-left: 2rem;
+        margin-bottom: 16px;
+    }
+
+    .project-container p,
+    .project-container ul {
+        margin: 0;
+        margin-top: 12px;
+    }
+}

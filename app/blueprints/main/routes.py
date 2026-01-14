@@ -6,7 +6,6 @@ from app.db_helpers import get_joined_project_from_db, get_active_projects, get_
 
 @main_bp.route('/')
 def index():
-    import os
     return render_template('main/index.html')
 
 
@@ -49,15 +48,11 @@ def show_blog_post(slug):
     return render_template('main/blog-post.html', post=post)
 
 
-@main_bp.route('/dough-calculator')
-def do_calc():
-    return render_template('main/calculator.html')
+@main_bp.route('/resume')
+def resume():
+    return render_template('main/resume.html')
 
 
-@main_bp.route('/blog')
-def blog():
-    active_projects = get_active_projects()
-    data = {
-        'type': 'Blog'
-    }
-    return render_template('main/show-projects-blogs.html', objects=active_projects, data=data)
+@main_bp.route('/about-me')
+def about():
+    return render_template('main/about.html')

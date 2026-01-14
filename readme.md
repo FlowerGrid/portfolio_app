@@ -29,9 +29,10 @@
 5. Create User (Development Environment)
     * With your virtual environment active. From the root directory run
 
-        `flask create-user`
+        `flask create-user --admin`
     
     * You'll then be prompted to enter user credentials
+    * Only one admin user is allowed for now
 
 5. Set up image hosting
     * IMAGE_STORAGE_CONTAINER - hosting environment variable
