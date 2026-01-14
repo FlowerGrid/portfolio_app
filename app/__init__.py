@@ -67,6 +67,7 @@ def create_app():
     @app.context_processor
     def inject_logo_url():
         admin = get_admin()
+
         if admin:
             user_logo = admin.logo_img
 
@@ -74,10 +75,10 @@ def create_app():
                 return {
                     'logo_url': user_logo
                 }
-        else:
-            return {
-                'logo_url': url_for('static', filename='images/default-logo.png')
-            }
+        # Fallback if no admin or admin logo    
+        return {
+            'logo_url': url_for('static', filename='images/default-logo.png')
+        }
 
     return app
 
