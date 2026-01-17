@@ -48,6 +48,16 @@ tagButton.addEventListener('click', () => {
 })
 
 
+// Delete content block event listener
+contentBlocksContainer.addEventListener('click', (event) => {
+    let target = event.target;
+    if (target.classList.contains('del-content-block-btn')) {
+        let parentBlock = target.parentNode;
+        contentBlocksContainer.removeChild(parentBlock);
+    }
+})
+
+
 addTextBtn.addEventListener('click', () => {
     // create a new element
     let newContentBlock = document.createElement('div');
