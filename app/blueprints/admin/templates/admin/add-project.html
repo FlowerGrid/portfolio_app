@@ -8,7 +8,7 @@
 {% block admin_content %}
   <form class="add-post-form" id="add-post-form" action="{{ url_for('admin.add_project') }}" method="post" enctype="multipart/form-data" >
       {{ form.hidden_tag() }}
-      {{ form.post_id }}
+      {{ form.object_id }}
       
       <div class="title-container">
         <div class="post-input-container">{{ form.title.label }}{{ form.title() }}</div>
@@ -18,7 +18,7 @@
         </div> --> #}
       </div>
 
-      {% if data.page_name == 'Add Project' %}
+      {% if data.model == 'project' %}
         <div class="post-input-container">
           {{ form.project_link.label }}{{ form.project_link() }}
         </div>
@@ -32,7 +32,7 @@
       <div class="tags-container">
         <h4>Tags</h4>
         <div class="tag-input-container">
-          <!-- <label for="tag-input">Enter a tag</label> -->
+          {#<!-- <label for="tag-input">Enter a tag</label> -->#}
           <input type="text" name="tag-input" id="tag-input" maxlength="30" placeholder="Add a tag">
           <input type="button" id="tag-input-button" class="button-styles" value="Add Tag">
         </div>
@@ -50,6 +50,15 @@
       </div>
       
       <div class="blurb-container">{{ form.blurb.label }} {{ form.blurb() }}</div>
+
+      {# <!-- Content blocks --> #}
+      <div class="content-blocks-container">
+      </div>
+      <div class="content-block-buttons">
+        <input type="text" id="add-text-content-block" class="button-styles" value="Add Text">
+        <input type="text" id="add-image-content-block" class="button-styles" value="Add Image">
+      </div>
+
 
       {{ form.form_submit_btn(id="form-submit-btn") }}
   </form>

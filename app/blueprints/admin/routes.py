@@ -135,6 +135,7 @@ def add_project():
     form = ProjectForm()
     # form.category.choices = [(cat.id, cat.name) for cat in CATEGORIES]
     data = {
+        'model': 'project',
         'page_name': 'Add Project',
     }
     if form.validate_on_submit():
@@ -152,6 +153,7 @@ def new_blog_post():
     form = BlogForm()
     # form.category.choices = [(cat.id, cat.name) for cat in CATEGORIES]
     data = {
+        'model': 'blog',
         'page_name': 'New Post'
     }
     if form.validate_on_submit():
@@ -165,12 +167,13 @@ def new_blog_post():
 
 @admin_bp.route('/edit-project/<int:object_id>')
 @login_required
-def edit_project(post_id):
-    project = db_helpers.get_joined_project_from_db('id', post_id)
+def edit_project(object_id):
+    project = db_helpers.get_joined_project_from_db('id', object_id)
     form = ProjectForm(obj=project)
     tags_list = [t.name for t in project.tags_in_project]
     # form.category.choices = [(cat.id, cat.name) for cat in CATEGORIES]
     data = {
+        'model': 'project',
         'page_name': 'Edit Project',
         'img': project.image_url,
         'tags_list': tags_list
@@ -180,12 +183,13 @@ def edit_project(post_id):
 
 @admin_bp.route('/edit-blog/<int:object_id>')
 @login_required
-def edit_blog_post(post_id):
-    blog = db_helpers.get_single_blog_post_by_id(post_id)
+def edit_blog_post(object_id):
+    blog = db_helpers.get_single_blog_post_by_id(object_id)
     form = BlogForm(obj=blog)
     tags_list = [t.name for t in blog.tags_in_blog_post]
     # form.category.choices = [(cat.id, cat.name) for cat in CATEGORIES]
     data = {
+        'model': 'blog',
         'page_name': 'Edit Blog',
         'img': blog.image_url,
         'tags_list': tags_list

@@ -2,10 +2,12 @@ const tagInput = document.querySelector('#tag-input');
 const tagDisplay = document.querySelector('.tags-display');
 const tagButton = document.querySelector('#tag-input-button');
 const formElement = document.querySelector('#add-post-form');
+const contentBlocksContainer = document.querySelector('.content-blocks-container')
 var existingTags = window.existingTags || [];
 
 
 const tagSet = new Set();
+const contentBlocks = []
 
 
 if (existingTags) {
@@ -18,9 +20,11 @@ if (existingTags) {
 
 formElement.addEventListener('submit', (event) =>{
     event.preventDefault()
-    const hiddenInput = document.querySelector('#tags');
+    const tagsHiddenInput = document.querySelector('#tags');
+    const contentBlocksHiddenInput = document.querySelector('#content_blocks')
 
-    hiddenInput.value = JSON.stringify([...tagSet]);
+    tagsHiddenInput.value = JSON.stringify([...tagSet]);
+    contentBlocksHiddenInput = JSON.stringify(contentBlocks)
 
     formElement.submit();
 })
@@ -56,11 +60,13 @@ function normalizeTag(tag) {
         .replace(/[^\w_]/g, '');
 }
 
+
 function displayTag(tag) {
     return tag
         .replace(/_/g, ' ')
         .replace(/\b\w/g, c => c.toUpperCase());
 }
+
 
 function renderTags() {
     tagDisplay.innerHTML = '';
@@ -81,6 +87,7 @@ function renderTags() {
         tagDisplay.appendChild(newTag);
     });
 }
+
 
 // Remove tags
 tagDisplay.addEventListener('click', (event) => {
