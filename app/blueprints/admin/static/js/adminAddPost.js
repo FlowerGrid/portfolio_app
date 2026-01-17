@@ -2,7 +2,9 @@ const tagInput = document.querySelector('#tag-input');
 const tagDisplay = document.querySelector('.tags-display');
 const tagButton = document.querySelector('#tag-input-button');
 const formElement = document.querySelector('#add-post-form');
-const contentBlocksContainer = document.querySelector('.content-blocks-container')
+const addTextBtn = document.querySelector('#add-text-content-block');
+const addImgBtn = document.querySelector('#add-image-content-block');
+const contentBlocksContainer = document.querySelector('.content-blocks-container');
 var existingTags = window.existingTags || [];
 
 
@@ -24,7 +26,7 @@ formElement.addEventListener('submit', (event) =>{
     const contentBlocksHiddenInput = document.querySelector('#content_blocks')
 
     tagsHiddenInput.value = JSON.stringify([...tagSet]);
-    contentBlocksHiddenInput = JSON.stringify(contentBlocks)
+    contentBlocksHiddenInput = JSON.stringify(contentBlocks);
 
     formElement.submit();
 })
@@ -44,6 +46,54 @@ tagButton.addEventListener('click', () => {
         renderTags()
     }
 })
+
+
+addTextBtn.addEventListener('click', () => {
+    // create a new element
+    let newContentBlock = document.createElement('div');
+    newContentBlock.classList.toggle('content-block');
+
+    // add a text input field into the element
+    let textLabel = document.createElement('h4');
+    textLabel.textContent = 'Text Content'
+    let newBlockTextArea = document.createElement('textarea');
+    batchSetAttributes(
+        newBlockTextArea,
+        {
+            'class': 'text-block',
+            'name': 'text-block'
+        }
+    );
+
+
+    // add a delete content block button to the element
+    let deleteBlockBtn = document.createElement('input')
+    deleteBlockBtn.type = 'button'
+    batchSetAttributes(
+        deleteBlockBtn,
+        {
+            'class': 'button-styles del-content-block-btn',
+            'value': 'Delete Block'
+        }
+    );
+
+
+    // Append text area to content block
+    // Append delete button to content block
+    newContentBlock.appendChild(textLabel)
+    newContentBlock.appendChild(newBlockTextArea)
+    newContentBlock.appendChild(deleteBlockBtn)
+
+    // Append content block to content blocks container
+    contentBlocksContainer.appendChild(newContentBlock)
+})
+
+
+function batchSetAttributes(el, attrs) {
+    for (const key in attrs) {
+        el.setAttribute(key, attrs[key])
+    }
+}
 
 
 function addTagToSet(tagText) {

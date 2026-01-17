@@ -121,7 +121,6 @@ body {
 /* Buttons */
 .button-styles {
     background-color: #F1F3F4;
-
     text-decoration: none;
     color: inherit;
     border: 1px solid black;
@@ -130,6 +129,7 @@ body {
     padding: .2rem 1rem;
     margin: 4px 0;
     text-align: center;
+    cursor: pointer;
 
 }
 
