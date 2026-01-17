@@ -66,3 +66,5 @@ migrations/env2.py
 
 scripts
 scripts/
+
+dns_backups/

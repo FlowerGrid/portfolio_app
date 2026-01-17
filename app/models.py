@@ -106,3 +106,13 @@ class User(Base):
         normalized = answer.strip.casefold()
         return check_password_hash(self.security_answer_hash, normalized)
     
+
+class ContentBlock(Base):
+    __tablename__ = 'content_blocks'
+    id = Column(Integer, primary_key=True)
+    parent_type = Column(String, nullable=False)
+    parent_id = Column(Integer, nullable=False)
+    block_type = Column(String, nullable=False)
+    position = Column(Integer, nullable=False)
+    text_content = Column(String, nullable=True)
+    image_url = Column(String, nullable=True)

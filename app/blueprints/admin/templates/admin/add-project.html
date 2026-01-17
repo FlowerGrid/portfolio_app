@@ -8,7 +8,7 @@
 {% block admin_content %}
   <form class="add-post-form" id="add-post-form" action="{{ url_for('admin.add_project') }}" method="post" enctype="multipart/form-data" >
       {{ form.hidden_tag() }}
-      {{ form.project_id }}
+      {{ form.post_id }}
       
       <div class="title-container">
         <div class="post-input-container">{{ form.title.label }}{{ form.title() }}</div>
@@ -18,13 +18,15 @@
         </div> --> #}
       </div>
 
-      <div class="post-input-container">
-        {{ form.project_link.label }}{{ form.project_link() }}
-      </div>
+      {% if data.page_name == 'Add Project' %}
+        <div class="post-input-container">
+          {{ form.project_link.label }}{{ form.project_link() }}
+        </div>
 
-      <div class="post-input-container">
-        {{ form.github_link.label }}{{ form.github_link() }}
-      </div>
+        <div class="post-input-container">
+          {{ form.github_link.label }}{{ form.github_link() }}
+        </div>
+      {% endif %}
 
       <!-- Tags -->
       <div class="tags-container">
@@ -60,7 +62,6 @@
 
   <!-- Load the CKEditor JS -->
   {{ ckeditor.load() }}
-  {{ ckeditor.config(name='blurb', placeholder='Blog Post') }}
-  {{ ckeditor.config(name='steps', placeholder='Steps/Instructions') }}
+  {{ ckeditor.config(name='blurb', placeholder='Main Text') }}
 
 {% endblock %}

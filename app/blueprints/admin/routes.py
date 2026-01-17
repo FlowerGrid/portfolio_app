@@ -163,10 +163,10 @@ def new_blog_post():
     return render_template('admin/blog-post.html', form=form, data=data) # Removed - categories=CATEGORIES
 
 
-@admin_bp.route('/edit-project/<int:project_id>')
+@admin_bp.route('/edit-project/<int:object_id>')
 @login_required
-def edit_project(project_id):
-    project = db_helpers.get_joined_project_from_db('id', project_id)
+def edit_project(post_id):
+    project = db_helpers.get_joined_project_from_db('id', post_id)
     form = ProjectForm(obj=project)
     tags_list = [t.name for t in project.tags_in_project]
     # form.category.choices = [(cat.id, cat.name) for cat in CATEGORIES]
@@ -178,16 +178,16 @@ def edit_project(project_id):
     return (render_template('admin/add-project.html', data=data, form=form))
 
 
-@admin_bp.route('/edit-blog/<int:blog_id>')
+@admin_bp.route('/edit-blog/<int:object_id>')
 @login_required
-def edit_blog_post(blog_id):
-    post = db_helpers.get_single_blog_post_by_id(blog_id)
-    form = BlogForm(obj=post)
-    tags_list = [t.name for t in post.tags_in_blog_post]
+def edit_blog_post(post_id):
+    blog = db_helpers.get_single_blog_post_by_id(post_id)
+    form = BlogForm(obj=blog)
+    tags_list = [t.name for t in blog.tags_in_blog_post]
     # form.category.choices = [(cat.id, cat.name) for cat in CATEGORIES]
     data = {
         'page_name': 'Edit Blog',
-        'img': post.image_url,
+        'img': blog.image_url,
         'tags_list': tags_list
     }
     return (render_template('admin/blog-post.html', data=data, form=form))
