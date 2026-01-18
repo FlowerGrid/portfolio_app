@@ -40,14 +40,20 @@
         </ul>
       </div>
 
-      <div class="photo-container">
-        {{ form.photo.label }} {{ form.photo() }}    
-        {% if data.img %}
-        <div class="img-preview-container">
-          <img src="{{ data.img }}" alt="Image">
-        </div>
-        {% endif %}
+      {% if data.img %}
+      <div class="photo-container content-block" data-objectUrl="{{ data.img }}">
+        {{ form.photo.label }} {{ form.photo(class_=img-block) }}    
+        <img src="{{ data.img }}" class="img-preview" alt="Image">
       </div>
+      {% else %}
+      <div class="photo-container content-block">
+        {{ form.photo.label }} {{ form.photo(class_="img-block") }}    
+        <img class="img-preview">
+      </div>
+      {% endif %}
+
+        
+      
       
       <div class="blurb-container">{{ form.blurb.label }} {{ form.blurb() }}</div>
 

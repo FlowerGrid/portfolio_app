@@ -11,6 +11,7 @@ var existingTags = window.existingTags || [];
 
 const tagSet = new Set();
 const contentBlocks = []
+let imgCounter = 1;
 
 
 if (existingTags) {
@@ -53,7 +54,14 @@ tagButton.addEventListener('click', () => {
 contentBlocksContainer.addEventListener('click', (event) => {
     let target = event.target;
     if (target.classList.contains('del-content-block-btn')) {
+        // TODO
+        // Check for presence of file input
+        // URL.revokeObjectURL()
+
         let parentBlock = target.parentNode;
+        if (parentBlock.dataset.objectUrl) {
+            URL.revokeObjectURL(parentBlock.dataset.objectUrl);
+        }
         contentBlocksContainer.removeChild(parentBlock);
     }
 })
@@ -81,6 +89,7 @@ contentBlockBtns.addEventListener('click', (event) => {
         );
 
         let newBlockInput;
+        let imgPreview;
         // Text Block Specific Stuff
         if (target.id === 'add-text-content-block') {
             blockLabel.textContent = 'Text Content';
@@ -103,21 +112,50 @@ contentBlockBtns.addEventListener('click', (event) => {
                 {
                     'type': 'file',
                     'class': 'img-block',
-                    'accept': 'image/*'
+                    'accept': 'png, .jpg, .jpeg, .heic, .heif, image/png, image/jpeg, image/heic, image/heif',
+                    'name': `image-${imgCounter}`
                 }
             );
+
+            imgCounter ++;
+
+            imgPreview = document.createElement('img');
+            imgPreview.classList.add('img-preview')
         };
 
         // Add the elemnts to their conainers
-        let kiddos = [blockLabel, newBlockInput, deleteBlockBtn]
+        let kiddos = [blockLabel, newBlockInput, imgPreview, deleteBlockBtn]
         for (let kid of kiddos) {
-            newContentBlock.appendChild(kid);
+            if (kid) {
+                newContentBlock.appendChild(kid);
+            }
         }
 
         contentBlocksContainer.append(newContentBlock);
 
     };
 });
+
+// Image Previews
+document.addEventListener('change', (event) => {
+    let target = event.target;
+    if (target.classList.contains('img-block')) {
+
+        const parentContainer = target.parentNode;
+        if (parentContainer.dataset.objectUrl) {
+            URL.revokeObjectURL(parentContainer.dataset.objectUrl)
+        }
+
+        const file = target.files[0];
+        if (!file) return;
+
+        const objectUrl = URL.createObjectURL(file);
+        parentContainer.dataset.objectUrl = objectUrl;
+
+        const preview = parentContainer.querySelector('.img-preview');
+        preview.src = objectUrl;
+    }
+})
 
 
 function batchSetAttributes(el, attrs) {
