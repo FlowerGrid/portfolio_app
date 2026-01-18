@@ -4,6 +4,7 @@ const tagButton = document.querySelector('#tag-input-button');
 const formElement = document.querySelector('#add-post-form');
 const addTextBtn = document.querySelector('#add-text-content-block');
 const addImgBtn = document.querySelector('#add-image-content-block');
+const contentBlockBtns = document.querySelector('.content-block-buttons');
 const contentBlocksContainer = document.querySelector('.content-blocks-container');
 var existingTags = window.existingTags || [];
 
@@ -58,45 +59,65 @@ contentBlocksContainer.addEventListener('click', (event) => {
 })
 
 
-addTextBtn.addEventListener('click', () => {
-    // create a new element
-    let newContentBlock = document.createElement('div');
-    newContentBlock.classList.toggle('content-block');
+contentBlockBtns.addEventListener('click', (event) => {
+    let target = event.target;
+    if (target.classList.contains('add-content-btn')) {
+        // create a new element
+        let newContentBlock = document.createElement('div');
+        newContentBlock.classList.toggle('content-block');
 
-    // add a text input field into the element
-    let textLabel = document.createElement('h4');
-    textLabel.textContent = 'Text Content'
-    let newBlockTextArea = document.createElement('textarea');
-    batchSetAttributes(
-        newBlockTextArea,
-        {
-            'class': 'text-block',
-            'name': 'text-block'
+        // add a text input field into the element
+        let blockLabel = document.createElement('h4');
+    
+        // add a delete content block button to the element
+        let deleteBlockBtn = document.createElement('input')
+        deleteBlockBtn.type = 'button'
+        batchSetAttributes(
+            deleteBlockBtn,
+            {
+                'class': 'button-styles del-content-block-btn',
+                'value': 'Remove Block'
+            }
+        );
+
+        let newBlockInput;
+        // Text Block Specific Stuff
+        if (target.id === 'add-text-content-block') {
+            blockLabel.textContent = 'Text Content';
+
+            newBlockInput = document.createElement('textarea');
+            batchSetAttributes(
+                newBlockInput,
+                    {
+                        'class': 'text-block',
+                        'name': 'text-block'
+                    }
+            
+            );
+        } else if (target.id === 'add-image-content-block') {
+            blockLabel.textContent = 'Upload Image';
+
+            newBlockInput = document.createElement('input');
+            batchSetAttributes (
+                newBlockInput,
+                {
+                    'type': 'file',
+                    'class': 'img-block',
+                    'accept': 'image/*'
+                }
+            );
+        };
+
+        // Add the elemnts to their conainers
+        let kiddos = [blockLabel, newBlockInput, deleteBlockBtn]
+        for (let kid of kiddos) {
+            newContentBlock.appendChild(kid);
         }
-    );
 
+        contentBlocksContainer.append(newContentBlock);
 
-    // add a delete content block button to the element
-    let deleteBlockBtn = document.createElement('input')
-    deleteBlockBtn.type = 'button'
-    batchSetAttributes(
-        deleteBlockBtn,
-        {
-            'class': 'button-styles del-content-block-btn',
-            'value': 'Delete Block'
-        }
-    );
-
-
-    // Append text area to content block
-    // Append delete button to content block
-    newContentBlock.appendChild(textLabel)
-    newContentBlock.appendChild(newBlockTextArea)
-    newContentBlock.appendChild(deleteBlockBtn)
-
-    // Append content block to content blocks container
-    contentBlocksContainer.appendChild(newContentBlock)
-})
+    };
+});
 
 
 function batchSetAttributes(el, attrs) {
