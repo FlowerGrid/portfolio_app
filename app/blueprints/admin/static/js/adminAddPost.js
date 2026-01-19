@@ -6,6 +6,8 @@ const addTextBtn = document.querySelector('#add-text-content-block');
 const addImgBtn = document.querySelector('#add-image-content-block');
 const contentBlockBtns = document.querySelector('.content-block-buttons');
 const contentBlocksContainer = document.querySelector('.content-blocks-container');
+const parentType = document.querySelector('#parent-type').dataset.model;
+const parentId = document.querySelector('#id').value;
 var existingTags = window.existingTags || [];
 
 
@@ -28,7 +30,7 @@ formElement.addEventListener('submit', (event) =>{
     const contentBlocksHiddenInput = document.querySelector('#content_blocks')
 
     tagsHiddenInput.value = JSON.stringify([...tagSet]);
-    contentBlocksHiddenInput = JSON.stringify(contentBlocks);
+    contentBlocksHiddenInput.value = JSON.stringify(contentBlocks);
 
     formElement.submit();
 })
@@ -97,10 +99,10 @@ contentBlockBtns.addEventListener('click', (event) => {
             newBlockInput = document.createElement('textarea');
             batchSetAttributes(
                 newBlockInput,
-                    {
-                        'class': 'text-block',
-                        'name': 'text-block'
-                    }
+                {
+                    'class': 'text-block content-block-input',
+                    'data-content-type': 'text'
+                }
             
             );
         } else if (target.id === 'add-image-content-block') {
@@ -111,9 +113,10 @@ contentBlockBtns.addEventListener('click', (event) => {
                 newBlockInput,
                 {
                     'type': 'file',
-                    'class': 'img-block',
+                    'class': 'img-block content-block-input',
                     'accept': 'png, .jpg, .jpeg, .heic, .heif, image/png, image/jpeg, image/heic, image/heif',
-                    'name': `image-${imgCounter}`
+                    'name': `image-${imgCounter}`,
+                    'data-content-type': 'image'
                 }
             );
 
@@ -220,3 +223,30 @@ tagDisplay.addEventListener('click', (event) => {
         }
     }
 })
+
+
+// Content Block Functions
+function gatherContentBlockData() {
+    let blocks = contentBlocksContainer.querySelectorAll('.content-block')
+    let blockObjects = []
+    let blockPos = 0
+
+    for (let block of blocks) {
+
+        let inputElement = block.querySelector('.content-block-input');
+
+        let blockObj = {
+            'parentType': parentType,
+            'parentId': parentId || null,
+            'imageName': inputElement.getAttribute('name') || null,
+            'blockType': inputElement.dataset.contentType,
+            'position': blockPos,
+            'textContent': inputElement.value || null,
+            
+        };
+
+        blockObjects.push(blockObj);
+        blockPos++;
+    }
+
+}
