@@ -136,7 +136,11 @@ h4 {
 
 .content-block img {
     width: 50%;
+}
 
+.content-block .alt-text {
+    margin-left: 8px;
+    width: 85%;
 }
 
 .photo-container {

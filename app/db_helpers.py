@@ -12,7 +12,7 @@ import re
 from sqlalchemy.orm import joinedload
 from .db import db_session
 from werkzeug.utils import secure_filename
-from .models import Base, Project, User, BlogPost, Tag # Removed Category
+from .models import Base, Project, User, BlogPost, Tag, ContentBlock # Removed Category
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -25,71 +25,88 @@ MAX_SIZE = 1024
 
 def gather_form_data_unified(model_cls, form, rel_attr_name):
 
-    title = form.title.data.strip()
-    slug = secure_filename(slugify(title))
-    # cat_id = form.category.data
-    blurb = sanitize_html(form.blurb.data.strip())
-    model_cls_str = model_cls.__tablename__ # String of table's name
-    logger.info('model class string: ', model_cls_str)
-
-    project_exclusives = {}
     try:
-        project_exclusives['project_link'] = sanitize_html(form.project_link.data.strip())
-        project_exclusives['github_link'] = sanitize_html(form.github_link.data.strip())
-    except AttributeError:
-        pass
-
-    image_file = form.photo.data
-
-    tags_list = json.loads(form.tags.data)
-
-    # Add plain text blurb
-    blurb_plaintext = BeautifulSoup(blurb, 'html.parser').get_text()
-
-    obj_id = form.id.data
-
-    if obj_id:
-        # Delete old photo up here
-        model_obj = db_session.query(model_cls).filter_by(id=obj_id).first()
-        model_obj.title = title
-        model_obj.slug = slug
-        # project.category_id = cat_id
-        model_obj.blurb = blurb
-
-        if project_exclusives:
-            for key, value in project_exclusives.items():
-                setattr(model_obj, key, value)
-
-        model_obj.blurb_plaintext = blurb_plaintext
-
+        title = form.title.data.strip()
+        slug = secure_filename(slugify(title))
+        # cat_id = form.category.data
+        blurb = sanitize_html(form.blurb.data.strip())
         model_cls_str = model_cls.__tablename__ # String of table's name
+        logger.info('model class string: ', model_cls_str)
+        files = request.files # Images from content blocks
 
-        if image_file and image_file.filename != '':
-            model_obj.image_url = image_helper(model_cls_str, image_file, slug)
 
-        tags_handler(model_obj, tags_list, rel_attr_name)
+        project_exclusives = {}
+        try:
+            project_exclusives['project_link'] = sanitize_html(form.project_link.data.strip())
+            project_exclusives['github_link'] = sanitize_html(form.github_link.data.strip())
+        except AttributeError:
+            pass
 
-    else:
-        model_obj = model_cls(
-            title=title,
-            slug=slug,
-            blurb=blurb,
-            # image_url=None,
-            blurb_plaintext=blurb_plaintext) # Removed category_id=cat_id,
-        
-        if project_exclusives:
-            for key, value in project_exclusives.items():
-                setattr(model_obj, key, value)
+        image_file = form.photo.data
 
-        if tags_list:
+        tags_list = json.loads(form.tags.data)
+        content_blocks = json.loads(form.content_blocks.data) # List of dictionaries
+
+        # Add plain text blurb
+        blurb_plaintext = BeautifulSoup(blurb, 'html.parser').get_text()
+
+        obj_id = form.id.data
+
+        if obj_id:
+            # Delete old photo up here
+            model_obj = db_session.query(model_cls).filter_by(id=obj_id).first()
+            model_obj.title = title
+            model_obj.slug = slug
+            # project.category_id = cat_id
+            model_obj.blurb = blurb
+
+            if project_exclusives:
+                for key, value in project_exclusives.items():
+                    setattr(model_obj, key, value)
+
+            model_obj.blurb_plaintext = blurb_plaintext
+
+            model_cls_str = model_cls.__tablename__ # String of table's name
+
+            if image_file and image_file.filename != '':
+                model_obj.image_url = image_helper(model_cls_str, image_file, slug, 'hero')
+
             tags_handler(model_obj, tags_list, rel_attr_name)
 
-        if image_file and image_file.filename != '':
-            model_obj.image_url = image_helper(model_cls_str, image_file, slug)
+            content_blocks_handler(model_cls_str, content_blocks, obj_id, files, slug)
+
+        else:
+            model_obj = model_cls(
+                title=title,
+                slug=slug,
+                blurb=blurb,
+                # image_url=None,
+                blurb_plaintext=blurb_plaintext) # Removed category_id=cat_id,
+            
+            if project_exclusives:
+                for key, value in project_exclusives.items():
+                    setattr(model_obj, key, value)
+
+            if tags_list:
+                tags_handler(model_obj, tags_list, rel_attr_name)
+
+            if image_file and image_file.filename != '':
+                model_obj.image_url = image_helper(model_cls_str, image_file, slug, 'hero')
 
 
-        db_session.add(model_obj)
-    db_session.commit()
+            db_session.add(model_obj)
+
+            db_session.flush()
+
+            if content_blocks:
+                content_blocks_handler(model_cls_str, content_blocks, model_obj.id, files, slug)
+        
+        db_session.commit()
+    except Exception as e:
+        db_session.rollback()
+        logger.error(f'>>>> Form processing failed for project/blog {e}')
+        flash('Something went wrong. Please try again.', 'error')
+        return
 
 
 def normalize_tag_name(tag_name):
@@ -120,7 +137,40 @@ def tags_handler(model_obj, tags_list, relation):
     setattr(model_obj, relation, final_tags_list)
 
 
-def image_helper(model_cls_str, image_file, slug):
+def content_blocks_handler(parent_model, content_blocks, obj_id, files, slug):
+    # Remove existing blocks
+    if obj_id:
+        db_session.query(ContentBlock).filter_by(
+            parent_type=parent_model,
+            parent_id=obj_id
+        ).delete()
+
+    block_types = ['text', 'image']
+
+    for i, block in enumerate(content_blocks, start=1):
+
+        b_type = block['blockType'],
+        if b_type not in block_types:
+            raise ValueError
+        
+        image_file = sanitize_text_input(files['imageName']) # The actual file
+        image_name = sanitize_text_input(block['imageName']) # It's name from the html
+        content_block_model_object = ContentBlock(
+            parent_type = parent_model,
+            parent_id = obj_id if obj_id else None,
+            block_type=b_type,
+            position = i,
+            block_type = block['blockType'],
+            text_content = sanitize_text_input(block['textContent']),
+            # Images
+            image_url = image_helper(parent_model, image_file, slug, image_name),
+            image_alt_text = sanitize_text_input(block['altText'])
+        )
+
+        db_session.add(content_block_model_object)
+
+
+def image_helper(model_cls_str, image_file, slug, image_name):
     try:
         with Image.open(image_file) as img:
             img.verify()
@@ -128,7 +178,7 @@ def image_helper(model_cls_str, image_file, slug):
             # Reset file pointer so Pillow can read the image again
             image_file.seek(0)
 
-            organized_slug = f'{model_cls_str}/{slug}'
+            organized_slug = f'{model_cls_str}/{slug}/{image_name}'
             img_public_url = current_app.extensions['image_storage'].save(image_file, organized_slug)
 
         return img_public_url
@@ -252,7 +302,7 @@ def update_user(form):
     model_cls_str = 'users'
     slug = 'user-logo'
 
-    user.logo_img = image_helper(model_cls_str, image_file, slug)
+    user.logo_img = image_helper(model_cls_str, image_file, slug, 'logo')
 
     db_session.commit()
 
@@ -286,3 +336,11 @@ def sanitize_html(html_input):
     )
 
     return cleaned
+
+def sanitize_text_input(text):
+    if not text:
+        return None
+    
+    text = text.strip()
+    text = html.escape(text)
+    return text

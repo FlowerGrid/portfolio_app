@@ -6,9 +6,9 @@ const addTextBtn = document.querySelector('#add-text-content-block');
 const addImgBtn = document.querySelector('#add-image-content-block');
 const contentBlockBtns = document.querySelector('.content-block-buttons');
 const contentBlocksContainer = document.querySelector('.content-blocks-container');
-const parentType = document.querySelector('#parent-type').dataset.model;
-const parentId = document.querySelector('#id').value;
 var existingTags = window.existingTags || [];
+
+const MAX_MB = 8;
 
 
 const tagSet = new Set();
@@ -27,7 +27,8 @@ if (existingTags) {
 formElement.addEventListener('submit', (event) =>{
     event.preventDefault()
     const tagsHiddenInput = document.querySelector('#tags');
-    const contentBlocksHiddenInput = document.querySelector('#content_blocks')
+    const contentBlocksHiddenInput = document.querySelector('#content_blocks');
+    const contentBlocks = gatherContentBlockData();
 
     tagsHiddenInput.value = JSON.stringify([...tagSet]);
     contentBlocksHiddenInput.value = JSON.stringify(contentBlocks);
@@ -92,6 +93,8 @@ contentBlockBtns.addEventListener('click', (event) => {
 
         let newBlockInput;
         let imgPreview;
+        let altTextInput;
+        let altTextLabel;
         // Text Block Specific Stuff
         if (target.id === 'add-text-content-block') {
             blockLabel.textContent = 'Text Content';
@@ -123,11 +126,23 @@ contentBlockBtns.addEventListener('click', (event) => {
             imgCounter ++;
 
             imgPreview = document.createElement('img');
-            imgPreview.classList.add('img-preview')
+            imgPreview.classList.add('img-preview');
+
+            altTextInput = document.createElement('h4');
+            altTextInput = document.createElement('input');
+            batchSetAttributes(
+                altTextInput,
+                {
+                    'type': 'text',
+                    'class': 'alt-text',
+                    'placeholder': 'Alt Text',
+                    'maxlength': '150'
+                }
+            )
         };
 
         // Add the elemnts to their conainers
-        let kiddos = [blockLabel, newBlockInput, imgPreview, deleteBlockBtn]
+        let kiddos = [blockLabel, newBlockInput, imgPreview, altTextInput, deleteBlockBtn]
         for (let kid of kiddos) {
             if (kid) {
                 newContentBlock.appendChild(kid);
@@ -151,6 +166,16 @@ document.addEventListener('change', (event) => {
 
         const file = target.files[0];
         if (!file) return;
+
+        if (!file.type.startsWith("image/")) {
+            alert("Not an image");
+            return;
+        }
+
+        if (file.size > MAX_MB * 1024 * 1024) {
+            alert("Image too large");
+            return
+        }
 
         const objectUrl = URL.createObjectURL(file);
         parentContainer.dataset.objectUrl = objectUrl;
@@ -229,24 +254,25 @@ tagDisplay.addEventListener('click', (event) => {
 function gatherContentBlockData() {
     let blocks = contentBlocksContainer.querySelectorAll('.content-block')
     let blockObjects = []
-    let blockPos = 0
 
     for (let block of blocks) {
-
         let inputElement = block.querySelector('.content-block-input');
+        let altTextInput = block.querySelector('.alt-text');
+        let altText;
+        if (altTextInput) {
+            altText = altTextInput.value;
+        }
 
         let blockObj = {
-            'parentType': parentType,
-            'parentId': parentId || null,
-            'imageName': inputElement.getAttribute('name') || null,
             'blockType': inputElement.dataset.contentType,
-            'position': blockPos,
             'textContent': inputElement.value || null,
+            'imageName': inputElement.getAttribute('name') || null,
+            'altText': altText || null
             
         };
 
         blockObjects.push(blockObj);
-        blockPos++;
     }
 
+    return blockObjects
 }
