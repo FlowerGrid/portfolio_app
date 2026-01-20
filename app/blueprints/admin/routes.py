@@ -171,12 +171,16 @@ def edit_project(object_id):
     project = db_helpers.get_joined_project_from_db('id', object_id)
     form = ProjectForm(obj=project)
     tags_list = [t.name for t in project.tags_in_project]
+    content_blocks = db_helpers.get_content_blocks_from_db(Project.__tablename__, object_id)
     # form.category.choices = [(cat.id, cat.name) for cat in CATEGORIES]
     data = {
         'model': 'project',
         'page_name': 'Edit Project',
         'img': project.image_url,
-        'tags_list': tags_list
+        'context': {
+            'tags_list': tags_list,
+            'content_blocks': content_blocks
+        }
     }
     return (render_template('admin/add-project.html', data=data, form=form))
 

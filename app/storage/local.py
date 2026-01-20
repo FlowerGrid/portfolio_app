@@ -7,7 +7,7 @@ MAX_SIZE = 1024
 
 class LocalImageStorage:
     def __init__(self, app):
-        self.upload_dir = app.config['UPLOAD_FOLDER']
+        self.upload_dir = app.config['IMAGE_STORAGE_CONTAINER']
 
     def save(self, image_file, content_item_class, slug, image_uuid):
         with Image.open(image_file) as img:

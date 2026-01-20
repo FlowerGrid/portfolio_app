@@ -97,7 +97,6 @@ def gather_form_data_unified(model_cls, form, rel_attr_name):
             db_session.add(model_obj)
 
             db_session.flush()
-            print(f'>>>> content item id: {model_obj.id}')
 
             if content_blocks:
                 content_blocks_handler(model_cls_str, content_blocks, model_obj.id, files, slug)
@@ -138,13 +137,10 @@ def tags_handler(model_obj, tags_list, relation):
     setattr(model_obj, relation, final_tags_list)
 
 
-def content_blocks_handler(parent_model, content_blocks, obj_id, files, slug):
+def content_blocks_handler(content_item_class, content_blocks, parent_id, files, slug):
     # Remove existing blocks
-    if obj_id:
-        db_session.query(ContentBlock).filter_by(
-            parent_type=parent_model,
-            parent_id=obj_id
-        ).delete()
+    if parent_id:
+        get_content_blocks_from_db(content_item_class, parent_id).delete()
 
     block_types = ['text', 'image']
 
@@ -153,21 +149,27 @@ def content_blocks_handler(parent_model, content_blocks, obj_id, files, slug):
         sanitized_alt_text = None
 
         b_type = block['blockType']
-        print(f'>>>> {b_type}')
 
         if b_type not in block_types:
             raise ValueError('bad block type in content block image upload')
         
-        print('>>>> Block type passes')
         if b_type == 'image':
             image_file = files[block['imageName']] # The actual file
-            image_uuid = str(uuid.uuid4())
-            sanitized_alt_text = sanitize_text_input(block['altText'])
-            image_url = image_helper(parent_model, image_file, slug, image_uuid)
 
+            if block['recycleUuid']:
+                image_uuid = block['imageName']
+                temp_img_url = build_image_url(content_item_class, slug, image_uuid)
+                if os.path.exists(temp_img_url):
+                    image_url = temp_img_url
+            else:
+                image_uuid = str(uuid.uuid4())
+                image_url = image_helper(content_item_class, image_file, slug, image_uuid)
+
+            sanitized_alt_text = sanitize_text_input(block['altText'])
+            
         content_block_model_object = ContentBlock(
-            parent_type = parent_model,
-            parent_id = obj_id,
+            parent_type = content_item_class,
+            parent_id = parent_id,
             block_type=b_type,
             position = i,
             text_content = sanitize_text_input(block['textContent']),
@@ -176,11 +178,26 @@ def content_blocks_handler(parent_model, content_blocks, obj_id, files, slug):
             image_alt_text = sanitized_alt_text
         )
 
-        print('>>>> Content Block Object Created')
-
         db_session.add(content_block_model_object)
-        print('>>>> Content block object added to db_session')
-    print('>>> Content blocks finished')
+
+
+def get_content_blocks_from_db(content_item_class, parent_id):
+    content_blocks_table = db_session.query(ContentBlock).filter_by(
+        parent_type=content_item_class,
+        parent_id=parent_id  
+    ).order_by(ContentBlock.position).all()
+
+    return content_blocks_table
+
+
+def build_image_url(content_item_class, slug, image_uuid):
+    return os.path.join(
+        current_app.config['IMAGE_STORAGE_CONTAINER'],
+        content_item_class,
+        slug,
+        'images',
+        f'{image_uuid}.png'
+        )
 
 
 def image_helper(model_cls_str, image_file, slug, image_uuid):
@@ -298,7 +315,6 @@ def get_admin():
 #             category = Category(name=name, slug=slug)
 #             db_session.add(category)
 #     db_session.commit()
-#     print("✅ Categories seeded.")
 
 
 def update_user(form):

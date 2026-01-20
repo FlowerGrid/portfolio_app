@@ -116,4 +116,5 @@ class ContentBlock(Base):
     position = Column(Integer, nullable=False)
     text_content = Column(String, nullable=True)
     image_url = Column(String, nullable=True)
+    image_uuid = Column(String, nullable=True)
     image_alt_text = Column(String, nullable=True)
