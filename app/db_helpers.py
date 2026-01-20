@@ -31,7 +31,7 @@ def gather_form_data_unified(model_cls, form, rel_attr_name):
         # cat_id = form.category.data
         blurb = sanitize_html(form.blurb.data.strip())
         model_cls_str = model_cls.__tablename__ # String of table's name
-        logger.info('model class string: ', model_cls_str)
+        # logger.info('model class string: ', model_cls_str)
         files = request.files # Images from content blocks
 
 
@@ -67,7 +67,6 @@ def gather_form_data_unified(model_cls, form, rel_attr_name):
             model_obj.blurb_plaintext = blurb_plaintext
 
             model_cls_str = model_cls.__tablename__ # String of table's name
-
             if image_file and image_file.filename != '':
                 model_obj.image_url = image_helper(model_cls_str, image_file, slug, 'hero')
 
@@ -97,6 +96,7 @@ def gather_form_data_unified(model_cls, form, rel_attr_name):
             db_session.add(model_obj)
 
             db_session.flush()
+            print(f'>>>> content item id: {model_obj.id}')
 
             if content_blocks:
                 content_blocks_handler(model_cls_str, content_blocks, model_obj.id, files, slug)
@@ -104,7 +104,7 @@ def gather_form_data_unified(model_cls, form, rel_attr_name):
         db_session.commit()
     except Exception as e:
         db_session.rollback()
-        logger.error(f'>>>> Form processing failed for project/blog {e}')
+        logger.error(f'>>>> Main Exception: Form processing failed for project/blog - {e}')
         flash('Something went wrong. Please try again.', 'error')
         return
 
@@ -148,26 +148,41 @@ def content_blocks_handler(parent_model, content_blocks, obj_id, files, slug):
     block_types = ['text', 'image']
 
     for i, block in enumerate(content_blocks, start=1):
+        image_url = None
+        sanitized_alt_text = None
 
-        b_type = block['blockType'],
+        b_type = block['blockType']
+        print(f'>>>> {b_type}')
+
         if b_type not in block_types:
-            raise ValueError
+            raise ValueError('bad block type in content block image upload')
         
-        image_file = sanitize_text_input(files['imageName']) # The actual file
-        image_name = sanitize_text_input(block['imageName']) # It's name from the html
+        print('>>>> Block type passes')
+        if b_type == 'image':
+            print(f'>>>> Image name: {block['imageName']}')
+            image_file = files[block['imageName']] # The actual file
+            print('>>>> found image file')
+            sanitized_image_name = sanitize_text_input(block['imageName']) # It's name from the html
+            print('>>>> image Name Sanitized')
+            sanitized_alt_text = sanitize_text_input(block['altText'])
+            image_url = image_helper(parent_model, image_file, slug, sanitized_image_name)
+
         content_block_model_object = ContentBlock(
             parent_type = parent_model,
-            parent_id = obj_id if obj_id else None,
+            parent_id = obj_id,
             block_type=b_type,
             position = i,
-            block_type = block['blockType'],
             text_content = sanitize_text_input(block['textContent']),
             # Images
-            image_url = image_helper(parent_model, image_file, slug, image_name),
-            image_alt_text = sanitize_text_input(block['altText'])
+            image_url = image_url,
+            image_alt_text = sanitized_alt_text
         )
 
+        print('>>>> Content Block Object Created')
+
         db_session.add(content_block_model_object)
+        print('>>>> Content block object added to db_session')
+    print('>>> Content blocks finished')
 
 
 def image_helper(model_cls_str, image_file, slug, image_name):
@@ -179,7 +194,7 @@ def image_helper(model_cls_str, image_file, slug, image_name):
             image_file.seek(0)
 
             organized_slug = f'{model_cls_str}/{slug}/{image_name}'
-            img_public_url = current_app.extensions['image_storage'].save(image_file, organized_slug)
+            img_public_url = current_app.extensions['image_storage'].save(image_file, model_cls_str, slug, image_name)
 
         return img_public_url
     

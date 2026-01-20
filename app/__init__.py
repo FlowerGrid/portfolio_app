@@ -12,7 +12,7 @@ from flask_ckeditor import CKEditor
 import os
 from werkzeug.exceptions import HTTPException
 
-import traceback; traceback.print_stack()
+# import traceback; traceback.print_stack()
 
 load_dotenv()
 

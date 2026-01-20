@@ -129,7 +129,7 @@ def admin_all_blogs():
     return render_template('admin/view-objects-list.html', data=data, all_objects=blogs)
 
 
-@admin_bp.route('/add-project', methods=['GET', 'POST'])
+@admin_bp.route('/new-project', methods=['GET', 'POST'])
 @login_required
 def add_project():
     form = ProjectForm()
@@ -144,7 +144,7 @@ def add_project():
 
         return redirect(url_for('admin.admin_all_projects'))
 
-    return render_template('admin/add-project.html', form=form, data=data) # Removed - categories=CATEGORIES
+    return render_template('admin/add-project.html', form=form, data=data, form_action=url_for("admin.add_project")) # Removed - categories=CATEGORIES
 
 
 @admin_bp.route('/new-blog-post', methods=['GET', 'POST'])
@@ -162,7 +162,7 @@ def new_blog_post():
 
         return redirect(url_for('admin.admin_all_blogs'))
 
-    return render_template('admin/blog-post.html', form=form, data=data) # Removed - categories=CATEGORIES
+    return render_template('admin/add-project.html', form=form, data=data, form_action=url_for('admin.new_blog_post')) # Removed - categories=CATEGORIES
 
 
 @admin_bp.route('/edit-project/<int:object_id>')
@@ -194,7 +194,7 @@ def edit_blog_post(object_id):
         'img': blog.image_url,
         'tags_list': tags_list
     }
-    return (render_template('admin/blog-post.html', data=data, form=form))
+    return (render_template('admin/add-project.html', data=data, form=form))
 
 
 @admin_bp.route('/toggle-active-status', methods=['POST'])
