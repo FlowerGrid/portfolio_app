@@ -1,5 +1,6 @@
 import bleach
 from bs4 import BeautifulSoup
+from .db import db_session
 from flask import request, session, flash, current_app
 from google.cloud import storage
 import html, json
@@ -10,7 +11,7 @@ from PIL import Image
 import pillow_heif
 import re
 from sqlalchemy.orm import joinedload
-from .db import db_session
+import uuid
 from werkzeug.utils import secure_filename
 from .models import Base, Project, User, BlogPost, Tag, ContentBlock # Removed Category
 
@@ -159,13 +160,10 @@ def content_blocks_handler(parent_model, content_blocks, obj_id, files, slug):
         
         print('>>>> Block type passes')
         if b_type == 'image':
-            print(f'>>>> Image name: {block['imageName']}')
             image_file = files[block['imageName']] # The actual file
-            print('>>>> found image file')
-            sanitized_image_name = sanitize_text_input(block['imageName']) # It's name from the html
-            print('>>>> image Name Sanitized')
+            image_uuid = str(uuid.uuid4())
             sanitized_alt_text = sanitize_text_input(block['altText'])
-            image_url = image_helper(parent_model, image_file, slug, sanitized_image_name)
+            image_url = image_helper(parent_model, image_file, slug, image_uuid)
 
         content_block_model_object = ContentBlock(
             parent_type = parent_model,
@@ -185,7 +183,7 @@ def content_blocks_handler(parent_model, content_blocks, obj_id, files, slug):
     print('>>> Content blocks finished')
 
 
-def image_helper(model_cls_str, image_file, slug, image_name):
+def image_helper(model_cls_str, image_file, slug, image_uuid):
     try:
         with Image.open(image_file) as img:
             img.verify()
@@ -193,8 +191,7 @@ def image_helper(model_cls_str, image_file, slug, image_name):
             # Reset file pointer so Pillow can read the image again
             image_file.seek(0)
 
-            organized_slug = f'{model_cls_str}/{slug}/{image_name}'
-            img_public_url = current_app.extensions['image_storage'].save(image_file, model_cls_str, slug, image_name)
+            img_public_url = current_app.extensions['image_storage'].save(image_file, model_cls_str, slug, image_uuid)
 
         return img_public_url
     
