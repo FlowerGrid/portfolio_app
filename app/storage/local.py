@@ -9,7 +9,7 @@ class LocalImageStorage:
     def __init__(self, app):
         self.upload_dir = app.config['IMAGE_STORAGE_CONTAINER']
 
-    def save(self, image_file, content_item_class, slug, image_uuid):
+    def save(self, image_file, content_item_class, content_item_id, image_uuid):
         with Image.open(image_file) as img:
         # convert to png
             img = img.convert('RGB')
@@ -17,8 +17,9 @@ class LocalImageStorage:
             img.thumbnail((MAX_SIZE, MAX_SIZE)) # MAX_SIZE = 1024
 
             class_dir = os.path.join(self.upload_dir, content_item_class)
-            content_item_dir = os.path.join(class_dir, slug)
+            content_item_dir = os.path.join(class_dir, content_item_id)
             images_dir = os.path.join(content_item_dir, 'images')
+
 
             # Create uploads folder if it doesn't exist
             if not os.path.exists(class_dir):
@@ -34,8 +35,9 @@ class LocalImageStorage:
                 
 
             filename = os.path.join(images_dir, f'{image_uuid}.png')
-            print(f'>>>> filename: {filename}')
 
             img.save(filename, format='PNG', optimize=True)
 
-        return os.path.join('/uploads', f'{slug}.png')
+            final_url = os.path.join('/uploads', content_item_class, content_item_id, 'images', f'{image_uuid}.png')
+
+        return final_url

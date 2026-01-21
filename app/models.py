@@ -118,3 +118,16 @@ class ContentBlock(Base):
     image_url = Column(String, nullable=True)
     image_uuid = Column(String, nullable=True)
     image_alt_text = Column(String, nullable=True)
+
+    def to_dict(self):
+        return {
+        'id': self.id,
+        'parent_type': self.parent_type,
+        'parent_id': self.parent_id,
+        'block_type': self.block_type,
+        'position': self.position,
+        'text_content': self.text_content,
+        'image_url': self.image_url,
+        'image_uuid': self.image_uuid,
+        'image_alt_text': self.image_alt_text
+        }

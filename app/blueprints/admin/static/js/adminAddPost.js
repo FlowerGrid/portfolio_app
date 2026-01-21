@@ -6,7 +6,14 @@ const addTextBtn = document.querySelector('#add-text-content-block');
 const addImgBtn = document.querySelector('#add-image-content-block');
 const contentBlockBtns = document.querySelector('.content-block-buttons');
 const contentBlocksContainer = document.querySelector('.content-blocks-container');
-var existingTags = window.existingTags || [];
+// var existingTags = window.existingTags || [];
+const {
+    tags_list: existingTags = [],
+    content_blocks: existingContentBlocks = [],
+} = window.APP_CONTEXT || {};
+
+console.log(existingTags)
+console.log(existingContentBlocks)
 
 const MAX_MB = 8;
 
@@ -21,6 +28,12 @@ if (existingTags) {
         addTagToSet(tag);
     }
     renderTags()
+}
+
+if (existingContentBlocks) {
+    for (let block of existingContentBlocks) {
+        generateContentBlock(block['block_type'], block)
+    }
 }
 
 
@@ -57,9 +70,6 @@ tagButton.addEventListener('click', () => {
 contentBlocksContainer.addEventListener('click', (event) => {
     let target = event.target;
     if (target.classList.contains('del-content-block-btn')) {
-        // TODO
-        // Check for presence of file input
-        // URL.revokeObjectURL()
 
         let parentBlock = target.parentNode;
         if (parentBlock.dataset.objectUrl) {
@@ -72,87 +82,17 @@ contentBlocksContainer.addEventListener('click', (event) => {
 
 contentBlockBtns.addEventListener('click', (event) => {
     let target = event.target;
+    let contentType;
     if (target.classList.contains('add-content-btn')) {
-        // create a new element
-        let newContentBlock = document.createElement('div');
-        newContentBlock.classList.toggle('content-block');
-
-        // add a text input field into the element
-        let blockLabel = document.createElement('h4');
-    
-        // add a delete content block button to the element
-        let deleteBlockBtn = document.createElement('input')
-        deleteBlockBtn.type = 'button'
-        batchSetAttributes(
-            deleteBlockBtn,
-            {
-                'class': 'button-styles del-content-block-btn',
-                'value': 'Remove Block'
-            }
-        );
-
-        let newBlockInput;
-        let imgPreview;
-        let altTextInput;
-        let altTextLabel;
-        // Text Block Specific Stuff
         if (target.id === 'add-text-content-block') {
-            blockLabel.textContent = 'Text Content';
-
-            newBlockInput = document.createElement('textarea');
-            batchSetAttributes(
-                newBlockInput,
-                {
-                    'class': 'text-block content-block-input',
-                    'data-content-type': 'text'
-                }
-            
-            );
+            contentType = 'text'
         } else if (target.id === 'add-image-content-block') {
-            blockLabel.textContent = 'Upload Image';
-
-            newBlockInput = document.createElement('input');
-            batchSetAttributes (
-                newBlockInput,
-                {
-                    'type': 'file',
-                    'class': 'img-block content-block-input',
-                    'accept': 'png, .jpg, .jpeg, .heic, .heif, image/png, image/jpeg, image/heic, image/heif',
-                    'name': `image-${imgCounter}`,
-                    'data-content-type': 'image'
-                }
-            );
-
-            imgCounter ++;
-
-            imgPreview = document.createElement('img');
-            imgPreview.classList.add('img-preview');
-
-            altTextInput = document.createElement('h4');
-            altTextInput = document.createElement('input');
-            batchSetAttributes(
-                altTextInput,
-                {
-                    'type': 'text',
-                    'class': 'alt-text',
-                    'placeholder': 'Alt Text',
-                    'maxlength': '150'
-                }
-            )
+            contentType = 'image'
         };
-
-        // Add the elemnts to their conainers
-        let kiddos = [blockLabel, newBlockInput, imgPreview, altTextInput, deleteBlockBtn]
-        for (let kid of kiddos) {
-            if (kid) {
-                newContentBlock.appendChild(kid);
-            }
-        }
-
-        contentBlocksContainer.append(newContentBlock);
-
+        generateContentBlock(contentType);
     };
 });
+
 
 // Image Previews
 document.addEventListener('change', (event) => {
@@ -251,6 +191,107 @@ tagDisplay.addEventListener('click', (event) => {
 
 
 // Content Block Functions
+function generateContentBlock(contentType, context=null) {
+        // create a new element
+        let newContentBlock = document.createElement('div');
+        newContentBlock.classList.toggle('content-block');
+
+        // add a text input field into the element
+        let blockLabel = document.createElement('h4');
+    
+        // add a delete content block button to the element
+        let deleteBlockBtn = document.createElement('input')
+        deleteBlockBtn.type = 'button'
+        batchSetAttributes(
+            deleteBlockBtn,
+            {
+                'class': 'button-styles del-content-block-btn',
+                'value': 'Remove Block'
+            }
+        );
+
+        let newBlockInput;
+        let imgPreview;
+        let altTextInput;
+        let altTextLabel;
+        // Text Block Specific Stuff
+        if (contentType === 'text') {
+            blockLabel.textContent = 'Text Content';
+
+            newBlockInput = document.createElement('textarea');
+            batchSetAttributes(
+                newBlockInput,
+                {
+                    'class': 'text-block content-block-input',
+                    'data-content-type': 'text'
+                }
+            
+            );
+            console.log(context)
+
+            if (context) {
+                newBlockInput.textContent = context['text_content'];
+            };
+
+        } else if (contentType === 'image') {
+            blockLabel.textContent = 'Upload Image';
+
+            newBlockInput = document.createElement('input');
+            let inputName;
+            let imagePreviewUrl;
+            let altTextValue;
+
+            if (context) {
+                inputName = context['image_uuid'];
+                imagePreviewUrl = context['image_url'];
+                altTextValue = context['image_alt_text'];
+                newBlockInput.dataset.recycleUuid = true;
+            } else {
+                inputName = `cb-image-${imgCounter}`;
+            }
+
+            batchSetAttributes (
+                newBlockInput,
+                {
+                    'type': 'file',
+                    'class': 'img-block content-block-input',
+                    'accept': 'png, .jpg, .jpeg, .heic, .heif, image/png, image/jpeg, image/heic, image/heif',
+                    'name': inputName,
+                    'data-content-type': 'image'
+                }
+            );
+
+            imgCounter ++;
+
+            imgPreview = document.createElement('img');
+            imgPreview.classList.add('img-preview');
+            imgPreview.setAttribute('src', imagePreviewUrl);
+
+            altTextInput = document.createElement('h4');
+            altTextInput = document.createElement('input');
+            batchSetAttributes(
+                altTextInput,
+                {
+                    'type': 'text',
+                    'class': 'alt-text',
+                    'placeholder': 'Alt Text',
+                    'maxlength': '150',
+                    'value': altTextValue
+                }
+            )
+        };
+
+        // Add the elemnts to their conainers
+        let kiddos = [blockLabel, newBlockInput, imgPreview, altTextInput, deleteBlockBtn]
+        for (let kid of kiddos) {
+            if (kid) {
+                newContentBlock.appendChild(kid);
+            }
+        }
+
+        contentBlocksContainer.append(newContentBlock);
+}
+
 function gatherContentBlockData() {
     let blocks = contentBlocksContainer.querySelectorAll('.content-block')
     let blockObjects = []
@@ -266,9 +307,9 @@ function gatherContentBlockData() {
         let blockObj = {
             'blockType': inputElement.dataset.contentType,
             'textContent': inputElement.value || null,
+            'recycleUuid': inputElement.dataset.recycleUuid || false,
             'imageName': inputElement.getAttribute('name') || null,
             'altText': altText || null
-            
         };
 
         blockObjects.push(blockObj);

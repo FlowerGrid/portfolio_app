@@ -62,13 +62,12 @@
         <input type="text" id="add-image-content-block" class="button-styles add-content-btn" value="Add Image">
       </div>
 
-
       {{ form.form_submit_btn(id="form-submit-btn") }}
   </form>
 
-  {% if data.tags_list %}
+  {% if json_data %}
     <script>
-      var existingTags = {{ data.tags_list | tojson }};
+      window.APP_CONTEXT = {{ json_data | tojson }}
     </script>
   {% endif %}
 

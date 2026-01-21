@@ -12,7 +12,7 @@ class GCSImageStorage:
     def __init__(self, app):
         self.bucket_name = app.config['IMAGE_STORAGE_CONTAINER']
 
-    def save(self, image_file, content_item_class, slug, image_uuid):
+    def save(self, image_file, content_item_class, content_item_id, image_uuid):
         # Process image with PIL
         with Image.open(image_file) as img:
             img = img.convert("RGB")
@@ -24,7 +24,7 @@ class GCSImageStorage:
         # Initialize GCS client
         client = storage.Client()
         bucket = client.bucket(self.bucket_name)
-        organized_slug = f'{content_item_class}/{slug}/images/{image_uuid}'
+        organized_slug = f'uploads/{content_item_class}/{content_item_id}/images/{image_uuid}'
         blob = bucket.blob(f"{organized_slug}.png")
         blob.upload_from_file(buffer, content_type="image/png")
         blob.make_public()

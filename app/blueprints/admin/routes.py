@@ -144,7 +144,7 @@ def add_project():
 
         return redirect(url_for('admin.admin_all_projects'))
 
-    return render_template('admin/add-project.html', form=form, data=data, form_action=url_for("admin.add_project")) # Removed - categories=CATEGORIES
+    return render_template('admin/add-edit-content-item.html', form=form, data=data, form_action=url_for("admin.add_project")) # Removed - categories=CATEGORIES
 
 
 @admin_bp.route('/new-blog-post', methods=['GET', 'POST'])
@@ -162,7 +162,7 @@ def new_blog_post():
 
         return redirect(url_for('admin.admin_all_blogs'))
 
-    return render_template('admin/add-project.html', form=form, data=data, form_action=url_for('admin.new_blog_post')) # Removed - categories=CATEGORIES
+    return render_template('admin/add-edit-content-item.html', form=form, data=data, form_action=url_for('admin.new_blog_post')) # Removed - categories=CATEGORIES
 
 
 @admin_bp.route('/edit-project/<int:object_id>')
@@ -170,19 +170,21 @@ def new_blog_post():
 def edit_project(object_id):
     project = db_helpers.get_joined_project_from_db('id', object_id)
     form = ProjectForm(obj=project)
+    form_action = url_for('admin.add_project')
     tags_list = [t.name for t in project.tags_in_project]
-    content_blocks = db_helpers.get_content_blocks_from_db(Project.__tablename__, object_id)
+    content_blocks = db_helpers.fetch_content_block_dicts(Project.__tablename__, object_id)
+
     # form.category.choices = [(cat.id, cat.name) for cat in CATEGORIES]
     data = {
         'model': 'project',
         'page_name': 'Edit Project',
         'img': project.image_url,
-        'context': {
-            'tags_list': tags_list,
-            'content_blocks': content_blocks
-        }
     }
-    return (render_template('admin/add-project.html', data=data, form=form))
+    json_data = {
+        'tags_list': tags_list,
+        'content_blocks': content_blocks
+    }
+    return (render_template('admin/add-edit-content-item.html', data=data, json_data=json_data, form=form, form_action=form_action))
 
 
 @admin_bp.route('/edit-blog/<int:object_id>')
@@ -190,15 +192,20 @@ def edit_project(object_id):
 def edit_blog_post(object_id):
     blog = db_helpers.get_single_blog_post_by_id(object_id)
     form = BlogForm(obj=blog)
+    form_action = url_for('admin.new_blog_post')
     tags_list = [t.name for t in blog.tags_in_blog_post]
+    content_blocks = db_helpers.fetch_content_block_dicts(Project.__tablename__, object_id)
     # form.category.choices = [(cat.id, cat.name) for cat in CATEGORIES]
     data = {
         'model': 'blog',
         'page_name': 'Edit Blog',
         'img': blog.image_url,
-        'tags_list': tags_list
     }
-    return (render_template('admin/add-project.html', data=data, form=form))
+    json_data = {
+        'tags_list': tags_list,
+        'content_blocks': content_blocks
+    }
+    return (render_template('admin/add-edit-content-item.html', data=data, json_data=json_data, form=form, form_action=form_action))
 
 
 @admin_bp.route('/toggle-active-status', methods=['POST'])

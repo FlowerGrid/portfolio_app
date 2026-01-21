@@ -16,8 +16,8 @@ from werkzeug.utils import secure_filename
 from .models import Base, Project, User, BlogPost, Tag, ContentBlock # Removed Category
 
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_FOLDER = os.path.abspath(os.path.join(BASE_DIR, '..', 'static', 'uploads'))
+# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# UPLOAD_FOLDER = os.path.abspath(os.path.join(BASE_DIR, '..', 'static', 'uploads'))
 
 pillow_heif.register_heif_opener()
 
@@ -74,6 +74,7 @@ def gather_form_data_unified(model_cls, form, rel_attr_name):
             tags_handler(model_obj, tags_list, rel_attr_name)
 
             content_blocks_handler(model_cls_str, content_blocks, obj_id, files, slug)
+            print(f'\n>>>> Completed content blocks\n')
 
         else:
             model_obj = model_cls(
@@ -90,13 +91,12 @@ def gather_form_data_unified(model_cls, form, rel_attr_name):
             if tags_list:
                 tags_handler(model_obj, tags_list, rel_attr_name)
 
-            if image_file and image_file.filename != '':
-                model_obj.image_url = image_helper(model_cls_str, image_file, slug, 'hero')
-
-
             db_session.add(model_obj)
-
             db_session.flush()
+            print(f'>>>> new-item-id: {model_obj.id}')
+
+            if image_file and image_file.filename != '':
+                model_obj.image_url = image_helper(model_cls_str, image_file, model_obj.id, 'hero')
 
             if content_blocks:
                 content_blocks_handler(model_cls_str, content_blocks, model_obj.id, files, slug)
@@ -140,48 +140,64 @@ def tags_handler(model_obj, tags_list, relation):
 def content_blocks_handler(content_item_class, content_blocks, parent_id, files, slug):
     # Remove existing blocks
     if parent_id:
-        get_content_blocks_from_db(content_item_class, parent_id).delete()
+        delete_content_blocks(content_item_class, parent_id)
 
     block_types = ['text', 'image']
 
+    print(f'>>>> block count: {len(content_blocks)}')
+    print(f'>>>> last block: {content_blocks[-1]}')
+
     for i, block in enumerate(content_blocks, start=1):
+        print(f'>>>> block: {i}')
         image_url = None
         sanitized_alt_text = None
+        image_uuid = None
 
         b_type = block['blockType']
+        print(f'>>>> text content: {block.get("textContent")}')
+
+        print(f'>>>> type: {b_type}')
 
         if b_type not in block_types:
             raise ValueError('bad block type in content block image upload')
         
         if b_type == 'image':
-            image_file = files[block['imageName']] # The actual file
+            image_file = files.get(block['imageName']) # The actual file
+            print(f'\n>>>> {image_file}\n')
 
-            if block['recycleUuid']:
-                image_uuid = block['imageName']
-                temp_img_url = build_image_url(content_item_class, slug, image_uuid)
-                if os.path.exists(temp_img_url):
-                    image_url = temp_img_url
-            else:
-                image_uuid = str(uuid.uuid4())
-                image_url = image_helper(content_item_class, image_file, slug, image_uuid)
+            if block.get('recycleUuid'):
+                print('>>>> Recycled UUID')
+                image_uuid = sanitize_text_input(block['imageName'])
+                print(f'>>>> image uuid: {image_uuid}')
+                _, image_url = image_urls_builder(
+                    content_item_class, parent_id, image_uuid
+                    )
+                print(f'>>>> image url: {image_url}')
 
-            sanitized_alt_text = sanitize_text_input(block['altText'])
+            if image_file:
+                print('>>>> Trying to write image')
+                image_uuid = image_uuid or str(uuid.uuid4())
+                image_url = image_helper(content_item_class, image_file, parent_id, image_uuid)
+
+            sanitized_alt_text = sanitize_text_input(block.get('altText'))
+            print(f'>>>> {sanitized_alt_text}')
             
         content_block_model_object = ContentBlock(
             parent_type = content_item_class,
             parent_id = parent_id,
             block_type=b_type,
             position = i,
-            text_content = sanitize_text_input(block['textContent']),
-            # Images
+            text_content = sanitize_text_input(block.get('textContent')),
             image_url = image_url,
+            image_uuid = image_uuid,
             image_alt_text = sanitized_alt_text
         )
 
         db_session.add(content_block_model_object)
+        print(f'>>>> block {i} added to db_session')
 
 
-def get_content_blocks_from_db(content_item_class, parent_id):
+def fetch_content_blocks(content_item_class, parent_id):
     content_blocks_table = db_session.query(ContentBlock).filter_by(
         parent_type=content_item_class,
         parent_id=parent_id  
@@ -190,17 +206,32 @@ def get_content_blocks_from_db(content_item_class, parent_id):
     return content_blocks_table
 
 
-def build_image_url(content_item_class, slug, image_uuid):
-    return os.path.join(
-        current_app.config['IMAGE_STORAGE_CONTAINER'],
+def fetch_content_block_dicts(content_item_class, parent_id):
+    return [cb.to_dict() for cb in fetch_content_blocks(content_item_class, parent_id)]
+
+
+def delete_content_blocks(content_item_class, parent_id):
+    db_session.query(ContentBlock).filter_by(
+        parent_type=content_item_class,
+        parent_id=parent_id
+    ).delete(synchronize_session=False)
+
+
+def image_urls_builder(content_item_class, content_item_id, image_uuid):
+    path = os.path.join(
         content_item_class,
-        slug,
+        content_item_id,
         'images',
         f'{image_uuid}.png'
         )
+    
+    rel_url = os.path.join('/uploads', path)
+    full_url = os.path.join(current_app.config['IMAGE_STORAGE_CONTAINER'], path)
+
+    return full_url, rel_url
 
 
-def image_helper(model_cls_str, image_file, slug, image_uuid):
+def image_helper(model_cls_str, image_file, content_item_id, image_uuid):
     try:
         with Image.open(image_file) as img:
             img.verify()
@@ -208,7 +239,9 @@ def image_helper(model_cls_str, image_file, slug, image_uuid):
             # Reset file pointer so Pillow can read the image again
             image_file.seek(0)
 
-            img_public_url = current_app.extensions['image_storage'].save(image_file, model_cls_str, slug, image_uuid)
+            img_public_url = current_app.extensions['image_storage'].save(
+                image_file, model_cls_str, content_item_id, image_uuid
+                )
 
         return img_public_url
     
