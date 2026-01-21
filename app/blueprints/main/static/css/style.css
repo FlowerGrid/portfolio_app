@@ -309,15 +309,11 @@ h2 {
     width: 85%;
     align-self: center;
     margin: 16px 0;
-    border: solid 4px var(--header-footer-bg-color);
+    /* border: solid 1px var(--header-footer-bg-color); */
     box-shadow: 
         3px 3px 2px silver
         -3px -3px 2px silver;
 
-}
-
-.page-content .img-container img {
-    /* aspect-ratio: 4 / 2.5; */
 }
 
 .page-content ol li {
@@ -325,9 +321,6 @@ h2 {
 }
 
 /* Content Block Styles */
-.content-block-text {
-    wid
-}
 
 /* Landing page */
 .index-main {

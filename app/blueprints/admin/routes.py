@@ -194,7 +194,7 @@ def edit_blog_post(object_id):
     form = BlogForm(obj=blog)
     form_action = url_for('admin.new_blog_post')
     tags_list = [t.name for t in blog.tags_in_blog_post]
-    content_blocks = db_helpers.fetch_content_block_dicts(Project.__tablename__, object_id)
+    content_blocks = db_helpers.fetch_content_block_dicts(BlogPost.__tablename__, object_id)
     # form.category.choices = [(cat.id, cat.name) for cat in CATEGORIES]
     data = {
         'model': 'blog',
@@ -205,6 +205,7 @@ def edit_blog_post(object_id):
         'tags_list': tags_list,
         'content_blocks': content_blocks
     }
+    print(f'>>>> json: {json_data}')
     return (render_template('admin/add-edit-content-item.html', data=data, json_data=json_data, form=form, form_action=form_action))
 
 
