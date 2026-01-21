@@ -15,6 +15,17 @@
     </div>
     {% endif %}
     {{ post.blurb | safe }}
+    {% if content_blocks %}
+      {% for block in content_blocks %}
+        <div class="content-block">
+          {% if block.block_type == 'text' %}
+            <p class="content-text">{{ block.text_content }}</p>
+          {% elif block.block_type == 'image' %}
+            <img src="{{ block.image_url }}" alt="{{ block.image_alt_text }}" class="content-block-img">
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% endif %}
   </div>
 <a href="{{ url_for('main.blog_posts')}}" class="back-button button-styles">← Back to Blog</a>
 </div>

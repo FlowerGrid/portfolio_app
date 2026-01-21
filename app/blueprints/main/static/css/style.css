@@ -314,6 +314,11 @@ h2 {
     line-height: 1.5;
 }
 
+/* Content Block Styles */
+.content-block-image {
+    width: 50%;
+}
+
 /* Landing page */
 .index-main {
     display: flex;

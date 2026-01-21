@@ -1,7 +1,7 @@
 from . import main_bp
 from flask import render_template, abort, redirect, url_for, jsonify, Blueprint
 from flask_ckeditor import CKEditor
-from app.db_helpers import get_joined_project_from_db, get_active_projects, get_active_blog_posts, get_single_blog_post_by_slug # Removed - seed_categories, get_all_categories
+from app.db_helpers import get_joined_project_from_db, get_active_projects, get_active_blog_posts, get_single_blog_post_by_slug, fetch_content_block_dicts # Removed - seed_categories, get_all_categories
 
 
 @main_bp.route('/')
@@ -26,9 +26,10 @@ def projects():
 @main_bp.route('/projects/<slug>')
 def project(slug):
     project = get_joined_project_from_db('slug', slug)
+    content_blocks = fetch_content_block_dicts(project.__tablename__, project.id)
     if not project or not project.is_active:
         abort(404)
-    return render_template('main/project.html', project=project)
+    return render_template('main/project.html', project=project, content_blocks=content_blocks)
 
 
 @main_bp.route('/blog')
@@ -43,9 +44,10 @@ def blog_posts():
 @main_bp.route('/blog/<slug>')
 def show_blog_post(slug):
     post = get_single_blog_post_by_slug(slug)
+    content_blocks = fetch_content_block_dicts(post.__tablename__, post.id)
     if not post or not post.is_active:
         abort(404)
-    return render_template('main/blog-post.html', post=post)
+    return render_template('main/blog-post.html', post=post, content_blocks=content_blocks)
 
 
 @main_bp.route('/resume')
