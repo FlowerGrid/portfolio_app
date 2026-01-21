@@ -31,11 +31,15 @@
     {% endif %}
     {% if content_blocks %}
       {% for block in content_blocks %}
-        <div class="content-block">
+        <div class="content-block page-content">
           {% if block.block_type == 'text' %}
-            <p class="content-text">{{ block.text_content }}</p>
+            <p class="content-block-text">{{ block.text_content }}</p>
           {% elif block.block_type == 'image' %}
-            <img src="{{ block.image_url }}" alt="{{ block.image_alt_text }}" class="content-block-img">
+            <div class="img-container">
+              <img class="img" src="{{ block.image_url }}" alt="{{ block.image_alt_text }}" class="content-block-img">
+            </div>
+          {% elif block.block_type == 'subheading' %}
+            <h3 class="content-block-subheading">{{ block.text_content }}</h3>
           {% endif %}
         </div>
       {% endfor %}

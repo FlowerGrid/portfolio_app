@@ -69,7 +69,7 @@ def gather_form_data_unified(model_cls, form, rel_attr_name):
 
             model_cls_str = model_cls.__tablename__ # String of table's name
             if image_file and image_file.filename != '':
-                model_obj.image_url = image_helper(model_cls_str, image_file, slug, 'hero')
+                model_obj.image_url = image_helper(model_cls_str, image_file, obj_id, 'hero')
 
             tags_handler(model_obj, tags_list, rel_attr_name)
 
@@ -142,21 +142,18 @@ def content_blocks_handler(content_item_class, content_blocks, parent_id, files,
     if parent_id:
         delete_content_blocks(content_item_class, parent_id)
 
-    block_types = ['text', 'image']
+    block_types = ['text', 'image', 'subheading']
 
     print(f'>>>> block count: {len(content_blocks)}')
-    print(f'>>>> last block: {content_blocks[-1]}')
-
     for i, block in enumerate(content_blocks, start=1):
-        print(f'>>>> block: {i}')
         image_url = None
         sanitized_alt_text = None
         image_uuid = None
+        text_content = None
 
         b_type = block['blockType']
-        print(f'>>>> text content: {block.get("textContent")}')
-
-        print(f'>>>> type: {b_type}')
+        
+        print(f'>>>> {b_type}')
 
         if b_type not in block_types:
             raise ValueError('bad block type in content block image upload')
@@ -179,15 +176,20 @@ def content_blocks_handler(content_item_class, content_blocks, parent_id, files,
                 image_uuid = image_uuid or str(uuid.uuid4())
                 image_url = image_helper(content_item_class, image_file, parent_id, image_uuid)
 
-            sanitized_alt_text = sanitize_text_input(block.get('altText'))
+            sanitized_alt_text = sanitize_text_input(block.get('altText'), 150)
             print(f'>>>> {sanitized_alt_text}')
+
+        if b_type == 'subheading':
+            text_content = sanitize_text_input(block.get('textContent'), 70)
+        elif b_type == 'text':
+            text_content = sanitize_text_input(block.get('textContent'), 750)
             
         content_block_model_object = ContentBlock(
             parent_type = content_item_class,
             parent_id = parent_id,
             block_type=b_type,
             position = i,
-            text_content = sanitize_text_input(block.get('textContent')),
+            text_content = text_content,
             image_url = image_url,
             image_uuid = image_uuid,
             image_alt_text = sanitized_alt_text
@@ -398,10 +400,15 @@ def sanitize_html(html_input):
 
     return cleaned
 
-def sanitize_text_input(text):
+def sanitize_text_input(text, limit=None):
     if not text:
         return None
     
     text = text.strip()
-    text = html.escape(text)
+    if not text:
+        return None
+    
+    if limit is not None and len(text) > limit:
+        text = text[:limit + 1]
+
     return text

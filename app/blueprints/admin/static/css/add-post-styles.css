@@ -138,7 +138,8 @@ h4 {
     width: 50%;
 }
 
-.content-block .alt-text {
+.content-block .alt-text,
+.content-block .subheading-block {
     margin-left: 8px;
     width: 85%;
 }

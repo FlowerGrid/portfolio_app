@@ -88,7 +88,9 @@ contentBlockBtns.addEventListener('click', (event) => {
             contentType = 'text'
         } else if (target.id === 'add-image-content-block') {
             contentType = 'image'
-        };
+        } else if (target.id =='add-subheading-content-block') {
+            contentType = 'subheading'
+        }
         generateContentBlock(contentType);
     };
 });
@@ -223,11 +225,11 @@ function generateContentBlock(contentType, context=null) {
                 newBlockInput,
                 {
                     'class': 'text-block content-block-input',
-                    'data-content-type': 'text'
+                    'data-content-type': 'text',
+                    'maxlength': '750',
                 }
             
             );
-            console.log(context)
 
             if (context) {
                 newBlockInput.textContent = context['text_content'];
@@ -279,7 +281,25 @@ function generateContentBlock(contentType, context=null) {
                     'value': altTextValue
                 }
             )
-        };
+        } else if (contentType = 'subheading') {
+            blockLabel.textContent = 'Subheading';
+
+            newBlockInput = document.createElement('input');
+            batchSetAttributes(
+                newBlockInput,
+                {
+                    'type': 'text',
+                    'class': 'subheading-block content-block-input',
+                    'data-content-type': 'subheading',
+                    'maxlength': '70',
+                    'placeholder': 'Enter Subheading Text'
+                }
+            )
+
+            if (context) {
+                newBlockInput.value = context['text_content']
+            }
+        }
 
         // Add the elemnts to their conainers
         let kiddos = [blockLabel, newBlockInput, imgPreview, altTextInput, deleteBlockBtn]
