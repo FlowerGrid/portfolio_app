@@ -250,6 +250,7 @@ function generateContentBlock(contentType, context=null) {
                 newBlockInput.dataset.recycleUuid = true;
             } else {
                 inputName = `cb-image-${imgCounter}`;
+                imagePreviewUrl = ''
             }
 
             batchSetAttributes (
