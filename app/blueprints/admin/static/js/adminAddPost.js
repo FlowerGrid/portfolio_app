@@ -278,7 +278,7 @@ function generateContentBlock(contentType, context=null) {
                     'class': 'alt-text',
                     'placeholder': 'Alt Text',
                     'maxlength': '150',
-                    'value': altTextValue
+                    'value': altTextValue || ''
                 }
             )
         } else if (contentType = 'subheading') {
@@ -305,7 +305,10 @@ function generateContentBlock(contentType, context=null) {
         let kiddos = [blockLabel, newBlockInput, imgPreview, altTextInput, deleteBlockBtn]
         for (let kid of kiddos) {
             if (kid) {
-                newContentBlock.appendChild(kid);
+                if (kid !== null){
+                    newContentBlock.appendChild(kid);
+                }
+                
             }
         }
 

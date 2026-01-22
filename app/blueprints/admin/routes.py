@@ -205,7 +205,7 @@ def edit_blog_post(object_id):
         'tags_list': tags_list,
         'content_blocks': content_blocks
     }
-    print(f'>>>> json: {json_data}')
+    
     return (render_template('admin/add-edit-content-item.html', data=data, json_data=json_data, form=form, form_action=form_action))
 
 

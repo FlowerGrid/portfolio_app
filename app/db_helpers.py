@@ -74,7 +74,6 @@ def gather_form_data_unified(model_cls, form, rel_attr_name):
             tags_handler(model_obj, tags_list, rel_attr_name)
 
             content_blocks_handler(model_cls_str, content_blocks, obj_id, files, slug)
-            print(f'\n>>>> Completed content blocks\n')
 
         else:
             model_obj = model_cls(
@@ -93,7 +92,6 @@ def gather_form_data_unified(model_cls, form, rel_attr_name):
 
             db_session.add(model_obj)
             db_session.flush()
-            print(f'>>>> new-item-id: {model_obj.id}')
 
             if image_file and image_file.filename != '':
                 model_obj.image_url = image_helper(model_cls_str, image_file, model_obj.id, 'hero')
@@ -144,7 +142,6 @@ def content_blocks_handler(content_item_class, content_blocks, parent_id, files,
 
     block_types = ['text', 'image', 'subheading']
 
-    print(f'>>>> block count: {len(content_blocks)}')
     for i, block in enumerate(content_blocks, start=1):
         image_url = None
         sanitized_alt_text = None
@@ -152,32 +149,24 @@ def content_blocks_handler(content_item_class, content_blocks, parent_id, files,
         text_content = None
 
         b_type = block['blockType']
-        
-        print(f'>>>> {b_type}')
 
         if b_type not in block_types:
             raise ValueError('bad block type in content block image upload')
         
         if b_type == 'image':
             image_file = files.get(block['imageName']) # The actual file
-            print(f'\n>>>> {image_file}\n')
 
             if block.get('recycleUuid'):
-                print('>>>> Recycled UUID')
                 image_uuid = sanitize_text_input(block['imageName'])
-                print(f'>>>> image uuid: {image_uuid}')
                 _, image_url = image_urls_builder(
                     content_item_class, parent_id, image_uuid
                     )
-                print(f'>>>> image url: {image_url}')
 
             if image_file:
-                print('>>>> Trying to write image')
                 image_uuid = image_uuid or str(uuid.uuid4())
                 image_url = image_helper(content_item_class, image_file, parent_id, image_uuid)
 
             sanitized_alt_text = sanitize_text_input(block.get('altText'), 150)
-            print(f'>>>> {sanitized_alt_text}')
 
         if b_type == 'subheading':
             text_content = sanitize_text_input(block.get('textContent'), 70)
@@ -196,7 +185,6 @@ def content_blocks_handler(content_item_class, content_blocks, parent_id, files,
         )
 
         db_session.add(content_block_model_object)
-        print(f'>>>> block {i} added to db_session')
 
 
 def fetch_content_blocks(content_item_class, parent_id):
@@ -242,7 +230,7 @@ def image_helper(model_cls_str, image_file, content_item_id, image_uuid):
             image_file.seek(0)
 
             img_public_url = current_app.extensions['image_storage'].save(
-                image_file, model_cls_str, content_item_id, image_uuid
+                image_file, model_cls_str, str(content_item_id), image_uuid
                 )
 
         return img_public_url
