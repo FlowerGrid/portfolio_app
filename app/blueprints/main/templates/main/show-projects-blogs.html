@@ -5,10 +5,12 @@
 {% block title %}{{ data.type }}{% endblock %}
 
 {% block content %}
-
+  <h1>
+    {{ data.type }}
+  </h1>
   <div class="all-objects-grid">
     {% for object in objects %}
-    {% if data.type == 'Project' %}
+    {% if data.type == 'Portfolio' %}
     <a href="projects/{{ object.slug }}" class="object-link">
     {% elif data.type == 'Blog' %}
     <a href="blog/{{ object.slug }}" class="object-link">

@@ -3,7 +3,7 @@
 <script src="{{ url_for('main.static', filename='js/projectScript.js') }}" defer></script>
 {% endblock %}
 
-{% block title %}{{ project.title }} Project{% endblock %}
+{% block title %}{{ project.title }}{% endblock %}
 
 {% block content %}
 <div class="page-content-container">
@@ -17,18 +17,13 @@
     </div>
     {% endif %}
     <div class="project-blurb project-item">
+      {% if content_type == 'Blog' %}
+        <h5 class="content-item-created-date">
+          <em>{{ project.created_at.strftime('%b %d, %Y') }}</em>
+        </h5>
+      {% endif %}
       {{ project.blurb | safe }}
     </div>
-    {% if project.project_link %}
-    <h4>
-      See it live in action <a href="{{ project.project_link }}" target="_blank">here</a>.
-    </h4>
-    {% endif %}
-    {% if project.github_link %}
-    <h4>
-      View the code <a href="{{ project.github_link }}" target="_blank"> here</a>.
-    </h4>
-    {% endif %}
     {% if content_blocks %}
       {% for block in content_blocks %}
         <div class="content-block page-content">
@@ -44,8 +39,22 @@
         </div>
       {% endfor %}
     {% endif %}
+        {% if project.project_link %}
+    <h3>
+      See it live in action <a href="{{ project.project_link }}" target="_blank">here</a>.
+    </h3>
+    {% endif %}
+    {% if project.github_link %}
+    <h3>
+      View the code <a href="{{ project.github_link }}" target="_blank"> here</a>.
+    </h3>
+    {% endif %}
   </div>
-  <a href="{{ url_for('main.projects')}}" class="back-button button-styles">← Back to Projects</a>
+  {% if content_type == 'Portfolio' %}
+  <a href="{{ url_for('main.projects')}}" class="back-button button-styles">← Back to {{content_type}}</a>
+  {% elif content_type == 'Blog' %}
+  <a href="{{ url_for('main.blog_posts')}}" class="back-button button-styles">← Back to {{content_type}}</a>
+  {% endif %}
 </div>
 
 

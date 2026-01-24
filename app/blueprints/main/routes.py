@@ -18,7 +18,7 @@ def merch():
 def projects():
     active_projects = get_active_projects()
     data = {
-        'type': 'Project'
+        'type': 'Portfolio'
     }
     return render_template('main/show-projects-blogs.html', objects=active_projects, data=data)
 
@@ -29,7 +29,7 @@ def project(slug):
     content_blocks = fetch_content_block_dicts(project.__tablename__, project.id)
     if not project or not project.is_active:
         abort(404)
-    return render_template('main/content-item.html', project=project, content_blocks=content_blocks)
+    return render_template('main/content-item.html', project=project, content_blocks=content_blocks, content_type='Portfolio')
 
 
 @main_bp.route('/blog')
@@ -47,7 +47,7 @@ def show_blog_post(slug):
     content_blocks = fetch_content_block_dicts(post.__tablename__, post.id)
     if not post or not post.is_active:
         abort(404)
-    return render_template('main/content-item.html', project=post, content_blocks=content_blocks)
+    return render_template('main/content-item.html', project=post, content_blocks=content_blocks, content_type='Blog')
 
 
 @main_bp.route('/resume')

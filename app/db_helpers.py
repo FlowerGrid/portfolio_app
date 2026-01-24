@@ -285,7 +285,7 @@ def get_single_blog_post_by_slug(slug):
 
 
 def get_active_blog_posts():
-    return db_session.query(BlogPost).filter_by(is_active=True)
+    return db_session.query(BlogPost).filter_by(is_active=True).order_by(BlogPost.created_at.desc()).all()
 
 
 def get_active_projects():
