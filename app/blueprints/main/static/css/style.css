@@ -10,10 +10,10 @@
     --link-hover-txt-color: #eeb230;
 
     --primary-text-color: var(--primary-dark);
-    --header-footer-bg-color: var(--secondary-light);
+    --header-footer-bg-color: var(--primary-dark);
     --header-footer-txt-color: var(--primary-light);
     --main-bg-color: var(--primary-light);
-    --button-bg-color: var(--secondary-light);
+    --button-bg-color: var(--primary-dark);
     --button-txt-color: var(--primary-light);
 
 }
@@ -144,8 +144,9 @@ nav ul {
 }
 
 .nav-link:hover {
-    color: var(--neat-brown);
+    /* color: var(--secondary-light); */
     transform: scale(1.1);
+    text-decoration: underline;
 }
 
 nav li {
@@ -362,6 +363,7 @@ h2 {
     font-size: 12pt;
     margin-top: 6px;
 }
+
 
 @media (min-width: 768px) {
     .hero-section {

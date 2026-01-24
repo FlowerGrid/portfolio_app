@@ -8,12 +8,8 @@
 
 {% block content %}
 <div class="resume-container">
-  <h1>My Resume</h1>
-  <div class="contact-container">
-    <h2>Ben Edge</h2>
-    <a href="https://www.linkedin.com/in/benjamine-e-4bbb542b4/" class="linkedin-link" target="_blank">LinkedIn</a>
-    <a href="https://www.github.com/FlowerGrid" class="github-link">Github</a>
-  </div>
+  <h1>Ben Edge's Resume</h1>
+  <!-- <h2>Ben Edge</h2> -->
   <h2>Professional Summary</h2>
   <p class="professional-summary">
     Self-taught software developer with a strong foundation in Python, JavaScript, 
@@ -172,6 +168,11 @@
         Emphasis on practical, business-oriented data projects.
       </li>
     </ul>
+  </div>
+  <div class="contact-container">
+    <a href="{{ url_for('main.projects')}}" class="button-styles">To Projects</a>
+    <a class="button-styles resume-link linkedin-link" href="https://www.linkedin.com/in/benjamine-e-4bbb542b4/" target="_blank">LinkedIn</a>
+    <a class="button-styles resume-link github-link" href="https://www.github.com/FlowerGrid" target="_blank">Github</a>
   </div>
 </div>
 {% endblock %}

@@ -1,3 +1,9 @@
+.contact-container {
+    display: flex;
+    flex-direction: column;
+    
+}
+
 @media (min-width: 768px) {
     h2, h4 {
         margin: 20px 0 0 0;
@@ -6,12 +12,6 @@
         width: 70%;
         display: flex;
         flex-direction: column;
-    }
-
-    .contact-container {
-        display: flex;
-        flex-direction: column;
-        
     }
 
     .project-container {
@@ -26,4 +26,16 @@
         margin: 0;
         margin-top: 12px;
     }
+
+    .contact-container {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    /* .resume-link {
+        align-self: flex-start;
+    } */
+}
+
+@media (max-width: 768px) {
 }
