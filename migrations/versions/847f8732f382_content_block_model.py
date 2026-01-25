@@ -32,7 +32,18 @@ def upgrade() -> None:
     sa.Column('image_alt_text', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_unique_constraint(None, 'users', ['is_admin'])
+    # op.create_unique_constraint(None, 'users', ['is_admin'])
+
+    # Partial Unique Constraint
+    # Allow many false, only one true
+    op.create_index(
+        'uq_single_admin',
+        'users',
+        ['is_admin'],
+        unique=True,
+        postgresql_where=sa.text('is_admin = TRUE')
+    )
+
     # ### end Alembic commands ###
 
 

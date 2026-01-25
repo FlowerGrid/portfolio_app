@@ -86,7 +86,7 @@ class User(Base):
     security_question = Column(String, nullable=False)
     security_answer_hash = Column(String)
 
-    is_admin = Column(Boolean, nullable=False, unique=True, default=False)
+    is_admin = Column(Boolean, nullable=False, default=False)
 
 
     def set_password(self, password):
