@@ -209,6 +209,7 @@ def delete_content_blocks(content_item_class, parent_id):
 
 def image_urls_builder(content_item_class, content_item_id, image_uuid):
     path = os.path.join(
+        current_app.config['IMAGE_STORAGE_CONTAINERIMAGE_STORAGE_CONTAINER'],
         content_item_class,
         content_item_id,
         'images',
