@@ -38,8 +38,8 @@ def gather_form_data_unified(model_cls, form, rel_attr_name):
 
         project_exclusives = {}
         try:
-            project_exclusives['project_link'] = sanitize_html(form.project_link.data.strip())
-            project_exclusives['github_link'] = sanitize_html(form.github_link.data.strip())
+            project_exclusives['project_link'] = sanitize_html(form.project_link.data.strip()) or None
+            project_exclusives['github_link'] = sanitize_html(form.github_link.data.strip()) or None
         except AttributeError:
             pass
 
