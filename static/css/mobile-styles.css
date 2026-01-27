@@ -32,6 +32,12 @@
     .hamburger-menu{
         padding: 1rem;
         display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .menu-label {
+        margin: 0;
     }
 
     .hamburger {
